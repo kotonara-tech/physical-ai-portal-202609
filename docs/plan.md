@@ -25,8 +25,10 @@
 完了条件の 7 項目は E2E（`tests/e2e/`、40 関数）で受け入れ済みです。
 
 テスト（2026-09-27）: Unit 18 / Kernel 72 メソッド、Functional 0。
-サイズの属性が付いているのは `DemoContentTest` だけで、`--group small,medium` で選ばれるのは
-125 件中 8 件です。CI はありません（`.github/` が無い）。
+全テストにサイズの属性が付いています（`--list-tests` で Small 23 件 / Medium 102 件）。
+E2E（Large）は 50 件で、比率は Small 13% / Medium 58% / Large 29%。目安の
+70〜80% / 15〜20% / 5〜10%（CLAUDE.md「テスト分類」）から外れていて、ピラミッドになっていません。
+CI はありません（`.github/` が無い）。
 
 ## テスト基盤と CI
 
@@ -35,8 +37,9 @@
 
 この節は上から順に進めます（2026-09-27 承認）。
 
-- [ ] `test`: 既存テストに `#[Small]` / `#[Medium]` を付ける（Unit = Small、Kernel = Medium）。
-      モジュールごとに 1 コミット（core / dashboard / lerobot / vote。demo は済）
+- [x] `test`: 既存テストに `#[Small]` / `#[Medium]` を付ける（Unit = Small、Kernel = Medium）。
+      モジュールごとに 1 コミット（core / dashboard / lerobot / vote。demo は済）。
+      例外: soarm_lerobot の `TrajectoryFormatDetectorTest` は Unit にあるが一時ファイルを書くので Medium
 - [ ] `ci`: GitHub Actions のワークフローを足す
   - `Dockerfile` の `app` ステージを build する（buildx + GHA キャッシュ）。Kernel は SQLite なので
     DB コンテナも compose も要らない
@@ -51,7 +54,8 @@
       先に JUnit ログでテストごとの時間を測り、Medium の既定 10 秒に収まるか確かめる
 - [ ] Functional（`BrowserTestBase`）の基盤を確かめ、CI に compose を使うジョブを足す。
       最初の Functional テストが要る機能（プロフィールの投稿履歴かブックマーク）と一緒にやる
-- [ ] 改めて整頓: Kernel に偏ったテストを Small へ押し下げる。モジュールごとに別の依頼
+- [ ] 改めて整頓: Kernel に偏ったテストを Small へ押し下げる。モジュールごとに別の依頼。
+      `TrajectoryFormatDetectorTest` も対象（`detect()` がファイルパスを受け取るので、今は一時ファイルが要る）
 
 ## 残スコープ
 
