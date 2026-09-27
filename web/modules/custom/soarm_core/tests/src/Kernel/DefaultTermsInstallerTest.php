@@ -62,7 +62,7 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
   }
 
   /**
-   * Tests that the tech tags terms from the spec are created.
+   * Tests that the tech tag terms from the spec are created.
    */
   public function testCreatesTechTagsFromTheSpec(): void {
     $this->container->get('soarm_core.default_terms')->install();

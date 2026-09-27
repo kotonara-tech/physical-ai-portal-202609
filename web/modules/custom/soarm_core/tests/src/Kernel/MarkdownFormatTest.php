@@ -23,7 +23,7 @@ final class MarkdownFormatTest extends SoarmCoreKernelTestBase {
   }
 
   /**
-   * Tests that check_markup() renders Markdown while stripping raw script tags.
+   * Tests that check_markup() renders Markdown and leaves no raw script tag.
    */
   public function testCheckMarkupRendersMarkdownSafely(): void {
     $html = (string) check_markup("## Steps\n\n<script>alert(1)</script>", 'soarm_markdown');
