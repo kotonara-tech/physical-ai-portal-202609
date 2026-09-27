@@ -124,6 +124,12 @@ jobs:
 
       - name: Every test is Small or Medium
         run: |
+          # 陽性対照: 一覧が読めなければ、下の検査は空振りで通ってしまう
+          all=$(docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --list-tests)
+          if ! grep -q '^ - ' <<<"$all"; then
+            echo "::error::Could not read the test list from phpunit --list-tests."
+            exit 1
+          fi
           listed=$(docker run --rm -u www-data "$IMAGE" \
             vendor/bin/phpunit -c phpunit.xml --list-tests --exclude-group small --exclude-group medium)
           unsized=$(grep '^ - ' <<<"$listed" || true)
