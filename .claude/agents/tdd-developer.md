@@ -44,8 +44,11 @@ CLAUDE.md の「テストを書く場所」の 1 → 4 の順に判断します�
 PHP クラスに切り出せないかを検討してください。
 
 - Small 以外を選んだ時は、なぜ Small で書けないのかを報告に書く。
-- 新しい PHPUnit テストのクラスには `#[Small]`（Unit）/ `#[Medium]`（Kernel・
-  Functional）を付ける（`PHPUnit\Framework\Attributes\Small` / `Medium`）。
+- PHPUnit テストのクラスには必ず `#[Small]` か `#[Medium]` を付ける
+  （`PHPUnit\Framework\Attributes\Small` / `Medium`）。サイズは置き場所ではなく、
+  実行時に使う資源で決める。Unit でも一時ファイルなどを使うなら `#[Medium]`。
+  Kernel・Functional は `#[Medium]`。PHPUnit に `#[Large]` は付けない。
+  印が無いか `#[Large]` だと CI が落ちる（CLAUDE.md「テスト分類」）。
 - Large（`tests/e2e/`）は、依頼で求められた時だけ、受け入れ条件の外側ループとして
   最初に 1 本書く。
 - Kernel テストの SQLite はモジュールごとに分ける:
