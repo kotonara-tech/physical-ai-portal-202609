@@ -32,7 +32,7 @@ CI は GitHub Actions（`.github/workflows/ci.yml`）で、Small・Medium・phpc
 
 ## テスト基盤と CI
 
-ゴール: push と PR のたびに、Small と Medium のテストが GitHub Actions で走り、
+ゴール: main への push と PR のたびに、Small と Medium のテストが GitHub Actions で走り、
 サイズの無いテストが入ったら CI が落ちる。Large（E2E・GUI）は CI に入れない。
 
 この節は上から順に進めます（2026-09-27 承認）。
@@ -54,6 +54,8 @@ CI は GitHub Actions（`.github/workflows/ci.yml`）で、Small・Medium・phpc
       先に JUnit ログでテストごとの時間を測り、Medium の既定 10 秒に収まるか確かめる
 - [ ] Functional（`BrowserTestBase`）の基盤を確かめ、CI に compose を使うジョブを足す。
       最初の Functional テストが要る機能（プロフィールの投稿履歴かブックマーク）と一緒にやる
+- [ ] Small の条件を CI で機械的に確かめる: Small のステップを `docker run --network none --read-only`
+      で流し、ネットワークとファイルの書き込みを使う Small を落とす（今は印の有無しか見ていない）
 - [ ] 改めて整頓: Kernel に偏ったテストを Small へ押し下げる。モジュールごとに別の依頼。
       `TrajectoryFormatDetectorTest` も対象（`detect()` がファイルパスを受け取るので、今は一時ファイルが要る）
 
