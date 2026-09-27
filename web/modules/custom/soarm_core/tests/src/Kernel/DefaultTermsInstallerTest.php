@@ -69,9 +69,19 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
 
     $names = $this->termNames('tech_tags');
     foreach ([
-      'ROS2', 'MoveIt', 'LeRobot', 'Jetson', '模倣学習', '強化学習',
-      'Diffusion Policy', 'ACT', 'VLA', 'ピック&プレース', '柔軟物把持',
-      '力制御', 'Isaac Sim',
+      'ROS2',
+      'MoveIt',
+      'LeRobot',
+      'Jetson',
+      '模倣学習',
+      '強化学習',
+      'Diffusion Policy',
+      'ACT',
+      'VLA',
+      'ピック&プレース',
+      '柔軟物把持',
+      '力制御',
+      'Isaac Sim',
     ] as $expected) {
       $this->assertContains($expected, $names);
     }
