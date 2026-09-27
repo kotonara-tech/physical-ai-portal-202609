@@ -13,6 +13,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Tests the JSON vote API at /api/soarm/vote/{node} and the vote display.
  */
 #[Group('soarm_vote')]
+#[Medium]
 final class VoteApiTest extends KernelTestBase {
 
   use UserCreationTrait;

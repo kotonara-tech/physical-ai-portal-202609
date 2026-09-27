@@ -13,11 +13,13 @@ use Drupal\soarm_vote\VoteManagerInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests casting, withdrawing and counting votes.
  */
 #[Group('soarm_vote')]
+#[Medium]
 final class VoteManagerTest extends KernelTestBase {
 
   use UserCreationTrait;
