@@ -50,7 +50,8 @@ repo の `CLAUDE.md` を読み、次の節を基準にしてください。中�
   `config/install`・`*.routing.yml`・`*.permissions.yml`・`*.services.yml` の意味、
   出力（render array・エスケープ・cache metadata）の変化を見る。
 - `tidy` が CLAUDE.md の定義（1 つのクラスとそのテストの中で公開面を変えない整頓 1 種類）に
-  収まっているか。はみ出すなら `refactor` が正しい。
+  収まっているか。はみ出すなら `refactor` が正しい。ただし docblock・phpcs の機械的な整形・
+  テストメソッドの改名は、1 モジュールの中なら複数クラスにまたがっても `tidy`（CLAUDE.md の例外）。
 - 元に戻しにくい変更（route の path、machine name、config schema、JSON:API の
   リソース名・属性、`hook_update_N`、DB スキーマ）が整頓として扱われていないか。
 - Red だけのコミット（テストが赤のままのコミット）が無いか。
