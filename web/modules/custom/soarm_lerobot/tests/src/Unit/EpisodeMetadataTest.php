@@ -92,9 +92,15 @@ YAML;
       'fps not a positive integer' => ["robot_type: so-arm100\nfps: 0\n$phases", 'fps'],
       'missing phases' => ["robot_type: so-arm100\nfps: 30\n", 'phases'],
       'missing release' => ["robot_type: so-arm100\nfps: 30\nphases:\n  - name: grasp\n  - name: move\n", 'release'],
-      'wrong order' => ["robot_type: so-arm100\nfps: 30\nphases:\n  - name: move\n  - name: grasp\n  - name: release\n", 'order'],
+      'wrong order' => [
+        "robot_type: so-arm100\nfps: 30\nphases:\n  - name: move\n  - name: grasp\n  - name: release\n",
+        'order',
+      ],
       'phase without name' => ["robot_type: so-arm100\nfps: 30\nphases:\n  - start_frame: 0\n", 'name'],
-      'end before start' => ["robot_type: so-arm100\nfps: 30\nphases:\n  - name: grasp\n    start_frame: 10\n    end_frame: 5\n  - name: move\n  - name: release\n", 'end_frame'],
+      'end before start' => [
+        "robot_type: so-arm100\nfps: 30\nphases:\n  - name: grasp\n    start_frame: 10\n    end_frame: 5\n  - name: move\n  - name: release\n",
+        'end_frame',
+      ],
     ];
   }
 
