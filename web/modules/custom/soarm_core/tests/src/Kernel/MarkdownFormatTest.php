@@ -13,12 +13,18 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('soarm_core')]
 final class MarkdownFormatTest extends SoarmCoreKernelTestBase {
 
+  /**
+   * Tests that the soarm_markdown format has the Markdown filter enabled.
+   */
   public function testFormatUsesTheMarkdownFilter(): void {
     $format = FilterFormat::load('soarm_markdown');
     $this->assertNotNull($format);
     $this->assertTrue($format->filters('soarm_markdown')->status);
   }
 
+  /**
+   * Tests that check_markup() renders Markdown while stripping raw script tags.
+   */
   public function testCheckMarkupRendersMarkdownSafely(): void {
     $html = (string) check_markup("## Steps\n\n<script>alert(1)</script>", 'soarm_markdown');
 

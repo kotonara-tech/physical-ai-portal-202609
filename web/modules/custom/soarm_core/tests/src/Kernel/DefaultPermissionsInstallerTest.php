@@ -26,6 +26,9 @@ final class DefaultPermissionsInstallerTest extends SoarmCoreKernelTestBase {
     $this->installConfig(['user']);
   }
 
+  /**
+   * Tests that anonymous visitors can read comments but not post them.
+   */
   public function testVisitorsCanReadCommentsButNotPost(): void {
     $this->container->get('soarm_core.default_permissions')->install();
 
@@ -34,6 +37,9 @@ final class DefaultPermissionsInstallerTest extends SoarmCoreKernelTestBase {
     $this->assertFalse($anonymous->hasPermission('post comments'));
   }
 
+  /**
+   * Tests that authenticated users can read and post comments.
+   */
   public function testLoggedInUsersCanReadAndPostComments(): void {
     $this->container->get('soarm_core.default_permissions')->install();
 
@@ -43,6 +49,9 @@ final class DefaultPermissionsInstallerTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests that permissions already granted before install() are kept.
+   */
   public function testExistingPermissionsAreKept(): void {
     Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access content')->save();
 
@@ -51,6 +60,9 @@ final class DefaultPermissionsInstallerTest extends SoarmCoreKernelTestBase {
     $this->assertTrue(Role::load(RoleInterface::ANONYMOUS_ID)->hasPermission('access content'));
   }
 
+  /**
+   * Tests that install() skips roles that do not exist.
+   */
   public function testMissingRolesAreSkipped(): void {
     Role::load(RoleInterface::ANONYMOUS_ID)->delete();
 

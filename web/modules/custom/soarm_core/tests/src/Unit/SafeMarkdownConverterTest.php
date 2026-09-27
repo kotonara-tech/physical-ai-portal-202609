@@ -16,6 +16,9 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('soarm_core')]
 final class SafeMarkdownConverterTest extends UnitTestCase {
 
+  /**
+   * The converter under test.
+   */
   private SafeMarkdownConverter $converter;
 
   /**
@@ -26,6 +29,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
     $this->converter = new SafeMarkdownConverter();
   }
 
+  /**
+   * Tests that headings and ordered lists are converted to HTML.
+   */
   public function testHeadingsAndOrderedListsAreConverted(): void {
     $html = $this->converter->toHtml("## Steps\n\n1. grasp\n2. move\n3. release");
 
@@ -34,6 +40,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
     $this->assertStringContainsString('<li>release</li>', $html);
   }
 
+  /**
+   * Tests that a fenced code block is converted to a pre/code element.
+   */
   public function testFencedCodeBlockIsConverted(): void {
     $html = $this->converter->toHtml("```bash\nros2 launch so_arm bringup.launch.py\n```");
 
@@ -41,6 +50,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
     $this->assertStringContainsString('ros2 launch so_arm bringup.launch.py', $html);
   }
 
+  /**
+   * Tests that raw HTML in the input is escaped, not executed.
+   */
   public function testRawHtmlIsEscapedNotExecuted(): void {
     $html = $this->converter->toHtml("before\n\n<script>alert(1)</script>\n\n<img src=x onerror=alert(2)>");
 
@@ -49,6 +61,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
     $this->assertStringContainsString('&lt;script&gt;', $html);
   }
 
+  /**
+   * Tests that javascript: links are neutralised while https links pass.
+   */
   public function testJavascriptLinksAreNeutralised(): void {
     $html = $this->converter->toHtml('[click](javascript:alert(1)) and [ok](https://huggingface.co/lerobot)');
 
@@ -56,6 +71,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
     $this->assertStringContainsString('href="https://huggingface.co/lerobot"', $html);
   }
 
+  /**
+   * Tests that empty input gives empty output.
+   */
   public function testEmptyInputGivesEmptyOutput(): void {
     $this->assertSame('', $this->converter->toHtml(''));
   }

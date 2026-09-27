@@ -19,15 +19,24 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('soarm_core')]
 final class ContentModelTest extends SoarmCoreKernelTestBase {
 
+  /**
+   * Tests that the robot_knowledge content type exists.
+   */
   public function testContentTypeExists(): void {
     $this->assertNotNull(NodeType::load('robot_knowledge'));
   }
 
+  /**
+   * Tests that the given vocabulary exists.
+   */
   #[DataProvider('vocabularyProvider')]
   public function testVocabularyExists(string $vid): void {
     $this->assertNotNull(Vocabulary::load($vid), "Vocabulary $vid is missing.");
   }
 
+  /**
+   * Data provider for testVocabularyExists().
+   */
   public static function vocabularyProvider(): array {
     return [
       ['task_category'],
@@ -39,6 +48,8 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
   }
 
   /**
+   * Tests that a node field has the expected type and cardinality.
+   *
    * @param string $field
    *   Field name on node.robot_knowledge.
    * @param string $type
@@ -54,6 +65,9 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     $this->assertSame($cardinality, FieldStorageConfig::loadByName('node', $field)->getCardinality());
   }
 
+  /**
+   * Data provider for testNodeField().
+   */
   public static function nodeFieldProvider(): array {
     return [
       'task category' => ['field_task_category', 'entity_reference', 1],
@@ -79,12 +93,18 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     ];
   }
 
+  /**
+   * Tests that the task category and outcome fields are required.
+   */
   public function testRequiredFields(): void {
     foreach (['field_task_category', 'field_outcome'] as $field) {
       $this->assertTrue(FieldConfig::loadByName('node', 'robot_knowledge', $field)->isRequired(), "$field must be required.");
     }
   }
 
+  /**
+   * Tests that entity reference fields target the right vocabulary.
+   */
   public function testReferenceFieldsTargetTheRightVocabulary(): void {
     $expected = [
       'field_task_category' => 'task_category',
@@ -99,11 +119,17 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests that tech tags can be created on the fly.
+   */
   public function testTechTagsCanBeCreatedOnTheFly(): void {
     $settings = FieldConfig::loadByName('node', 'robot_knowledge', 'field_tech_tags')->getSetting('handler_settings');
     $this->assertTrue($settings['auto_create']);
   }
 
+  /**
+   * Tests the allowed file extensions on the file fields.
+   */
   public function testFileExtensions(): void {
     $expected = [
       'field_video' => ['mp4', 'webm'],
@@ -116,15 +142,24 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests the allowed values list on field_outcome.
+   */
   public function testOutcomeAllowedValues(): void {
     $values = FieldStorageConfig::loadByName('node', 'field_outcome')->getSetting('allowed_values');
     $this->assertSame(['success', 'partial', 'failure'], array_keys($values));
   }
 
+  /**
+   * Tests that an unknown outcome value fails validation.
+   */
   public function testUnknownOutcomeFailsValidation(): void {
     $this->assertNotEmpty($this->outcomeViolations('maybe'));
   }
 
+  /**
+   * Tests that a known outcome value passes validation.
+   */
   public function testKnownOutcomePassesValidation(): void {
     $this->assertSame([], $this->outcomeViolations('partial'));
   }
@@ -149,11 +184,17 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     return $paths;
   }
 
+  /**
+   * Tests that field_procedure only allows the soarm_markdown format.
+   */
   public function testProcedureOnlyAllowsTheMarkdownFormat(): void {
     $config = FieldConfig::loadByName('node', 'robot_knowledge', 'field_procedure');
     $this->assertSame(['soarm_markdown'], $config->getSetting('allowed_formats'));
   }
 
+  /**
+   * Tests that the knowledge_comment comment type targets nodes.
+   */
   public function testCommentTypeTargetsNodes(): void {
     $type = $this->container->get('entity_type.manager')->getStorage('comment_type')->load('knowledge_comment');
     $this->assertNotNull($type);
@@ -161,6 +202,9 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     $this->assertNotNull(FieldConfig::loadByName('comment', 'knowledge_comment', 'comment_body'));
   }
 
+  /**
+   * Tests that the comment body is shown on view and editable on the form.
+   */
   public function testCommentBodyIsShownAndEditable(): void {
     $displays = $this->container->get('entity_display.repository');
 
@@ -173,6 +217,9 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     $this->assertSame('text_textarea', $form->getComponent('comment_body')['type'] ?? NULL);
   }
 
+  /**
+   * Tests that the user profile fields exist with the expected type.
+   */
   public function testUserProfileFields(): void {
     foreach (['field_affiliation' => 'string', 'field_expertise' => 'string'] as $field => $type) {
       $config = FieldConfig::loadByName('user', 'user', $field);
@@ -181,6 +228,9 @@ final class ContentModelTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests the permissions granted to the soarm_contributor role.
+   */
   public function testContributorRolePermissions(): void {
     $role = Role::load('soarm_contributor');
     $this->assertNotNull($role);

@@ -24,6 +24,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     return array_values(array_map(static fn ($term) => $term->label(), $storage->loadMultiple($ids)));
   }
 
+  /**
+   * Tests that the five task category terms are created in weight order.
+   */
   public function testCreatesTheFiveCategoriesInOrder(): void {
     $this->container->get('soarm_core.default_terms')->install();
 
@@ -33,6 +36,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     );
   }
 
+  /**
+   * Tests that the difficulty and robot model terms are created.
+   */
   public function testCreatesDifficultyAndRobotModels(): void {
     $this->container->get('soarm_core.default_terms')->install();
 
@@ -40,6 +46,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     $this->assertSame(['SO-ARM100', 'SO-ARM101'], $this->termNames('robot_model'));
   }
 
+  /**
+   * Tests that the robot model terms describe their characteristics.
+   */
   public function testRobotModelTermsDescribeTheirCharacteristics(): void {
     $this->container->get('soarm_core.default_terms')->install();
     $storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
@@ -52,6 +61,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     $this->assertStringContainsString('高トルク', $descriptions['SO-ARM101']);
   }
 
+  /**
+   * Tests that the tech tags terms from the spec are created.
+   */
   public function testCreatesTechTagsFromTheSpec(): void {
     $this->container->get('soarm_core.default_terms')->install();
 
@@ -61,6 +73,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests that the difficulty factor terms from the requirements are created.
+   */
   public function testCreatesDifficultyFactorsFromTheRequirements(): void {
     $this->container->get('soarm_core.default_terms')->install();
 
@@ -70,6 +85,9 @@ final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
     }
   }
 
+  /**
+   * Tests that installing the default terms twice does not duplicate them.
+   */
   public function testInstallIsIdempotent(): void {
     $installer = $this->container->get('soarm_core.default_terms');
     $installer->install();
