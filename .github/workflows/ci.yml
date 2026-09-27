@@ -50,14 +50,14 @@ jobs:
           cache-from: type=gha,scope=app
           cache-to: type=gha,scope=app,mode=max
 
-      - name: Every test has a size
+      - name: Every test is Small or Medium
         run: |
           listed=$(docker run --rm -u www-data "$IMAGE" \
-            vendor/bin/phpunit -c phpunit.xml --list-tests --exclude-group small,medium,large)
-          untagged=$(grep '^ - ' <<<"$listed" || true)
-          if [ -n "$untagged" ]; then
-            echo "::error::Tests without #[Small], #[Medium] or #[Large] (see CLAUDE.md, test sizes):"
-            echo "$untagged"
+            vendor/bin/phpunit -c phpunit.xml --list-tests --exclude-group small,medium)
+          unsized=$(grep '^ - ' <<<"$listed" || true)
+          if [ -n "$unsized" ]; then
+            echo "::error::PHPUnit tests need #[Small] or #[Medium]. Large tests live in tests/e2e/ (see CLAUDE.md, test sizes):"
+            echo "$unsized"
             exit 1
           fi
 
