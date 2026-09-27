@@ -4,7 +4,7 @@
 # GUI）は稼働中のスタックに当てるテストなので、CI では回しません。
 # テストは Dockerfile の app ステージのイメージの中で動かします（手元の
 # workspace-drupal-1 と同じ Dockerfile と composer.lock。ベースの drupal:11-fpm は
-# 動くタグなので、PHP のパッチ版は build した時期でずれうる）。Kernel テストは SQLite を使うので、
+# 動くタグなので、PHP のバージョンと OS は build した時期でずれうる）。Kernel テストは SQLite を使うので、
 # DB コンテナも compose も要りません。
 #
 # イメージは build ジョブで 1 回だけ作り、artifact で後のジョブに渡します。
@@ -141,7 +141,7 @@ jobs:
         if: ${{ !cancelled() && steps.load.outcome == 'success' }}
         run: |
           docker run --rm -u www-data "$IMAGE" \
-            vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
+            vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom web/themes/custom
 
   medium:
     # Kernel テストはテストメソッドごとに Drupal をインストールするので遅い。
