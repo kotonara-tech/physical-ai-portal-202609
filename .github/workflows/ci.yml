@@ -3,7 +3,8 @@
 # Small と Medium の PHPUnit テスト、phpcs を回します。Large（tests/e2e/ の E2E と
 # GUI）は稼働中のスタックに当てるテストなので、CI では回しません。
 # テストは Dockerfile の app ステージのイメージの中で動かします（手元の
-# workspace-drupal-1 と同じ PHP・vendor）。Kernel テストは SQLite を使うので、
+# workspace-drupal-1 と同じ Dockerfile と composer.lock。ベースの drupal:11-fpm は
+# 動くタグなので、PHP のパッチ版は build した時期でずれうる）。Kernel テストは SQLite を使うので、
 # DB コンテナも compose も要りません。
 #
 # イメージは build ジョブで 1 回だけ作り、artifact で後のジョブに渡します。
@@ -21,7 +22,7 @@ permissions:
 concurrency:
   # PR は新しい push で古い実行を止める。main は push ごとに別のグループにして、
   # どの push の結果も残す（同じグループだと、待機中の実行は新しい実行に取り消される）
-  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: true
 
 defaults:
