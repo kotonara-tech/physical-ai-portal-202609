@@ -43,7 +43,7 @@ CI は GitHub Actions（`.github/workflows/ci.yml`）で、Small・Medium・phpc
 - [x] `ci`: GitHub Actions のワークフローを足す（PR #1）
   - `Dockerfile` の `app` ステージを 1 回 build し（buildx + GHA キャッシュ）、artifact で
     各ジョブに渡す。Kernel は SQLite なので DB コンテナも compose も要らない
-  - サイズの検査: `phpunit --list-tests --exclude-group small,medium` が 0 件でなければ落とす
+  - サイズの検査: `phpunit --list-tests --exclude-group small --exclude-group medium` が 0 件でなければ落とす
     （PHPUnit に `#[Large]` は付けない）
   - Small: `phpunit --group small`。phpcs（`Drupal,DrupalPractice`）も同じジョブ
   - Medium: `phpunit --group medium`。モジュールごとに matrix で並列にする
