@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\soarm_dashboard\Kernel;
 
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\soarm_dashboard\DashboardQueryInterface;
 use Drupal\Tests\soarm_core\Kernel\SoarmCoreKernelTestBase;
@@ -65,10 +66,16 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
   }
 
   /**
-   * Tests that latest() skips unpublished posts.
+   * Tests that latest() skips unpublished posts and other content types.
    */
   public function testLatestSkipsUnpublishedAndOtherContentTypes(): void {
+    NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
     $this->createPost(['status' => 0]);
+    Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(),
+      'status' => 1,
+    ])->save();
     $visible = $this->createPost();
 
     $this->assertSame([(int) $visible->id()], $this->dashboard->latest(10));
