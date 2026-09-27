@@ -77,7 +77,7 @@ jobs:
             vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
           # 名前空間からモジュールが取れないテストは、どの Medium のジョブにも入らない。
           # 黙って漏らさずに落とす
-          outside=$(grep '^ - ' <<<"$listed" | grep -v -E '^ - Drupal\\Tests\\[a-z0-9_]+\\' || true)
+          outside=$(grep '^ - ' <<<"$listed" | grep -v -E '^ - Drupal\\Tests\\[a-z0-9_]+\\.' || true)
           if [ -n "$outside" ]; then
             echo "::error::Medium tests must be in the Drupal\\Tests\\<module>\\ namespace, or no job runs them:"
             echo "$outside"
