@@ -12,6 +12,9 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('soarm_lerobot')]
 final class EpisodeInfoProviderTest extends LeRobotKernelTestBase {
 
+  /**
+   * Tests that the info document combines the YAML, trajectory and video.
+   */
   public function testInfoCombinesYamlTrajectoryAndVideo(): void {
     $trajectory = $this->createFile('ep.parquet', self::PARQUET);
     $video = $this->createFile('ep.mp4', 'mp4');
@@ -32,6 +35,9 @@ final class EpisodeInfoProviderTest extends LeRobotKernelTestBase {
     $this->assertSame($video->createFileUrl(FALSE), $info['video_path']);
   }
 
+  /**
+   * Tests that a post without metadata has no info document.
+   */
   public function testPostWithoutMetadataHasNoInfo(): void {
     $node = $this->buildPost(['field_trajectory' => $this->createFile('only.parquet', self::PARQUET)]);
     $node->save();
@@ -39,6 +45,9 @@ final class EpisodeInfoProviderTest extends LeRobotKernelTestBase {
     $this->assertNull($this->container->get('soarm_lerobot.episode_info')->forNode($node));
   }
 
+  /**
+   * Tests that metadata invalidated after save gives no info, not an error.
+   */
   public function testMetadataThatBecameInvalidGivesNoInfoInsteadOfAnError(): void {
     $yaml = $this->createFile('later-broken.yaml', self::VALID_YAML);
     $node = $this->buildPost(['field_metadata_yaml' => $yaml]);
@@ -48,6 +57,9 @@ final class EpisodeInfoProviderTest extends LeRobotKernelTestBase {
     $this->assertNull($this->container->get('soarm_lerobot.episode_info')->forNode($node));
   }
 
+  /**
+   * Tests that the detail page shows the grasp/move/release phases.
+   */
   public function testDetailPageShowsThePhases(): void {
     $node = $this->buildPost(['field_metadata_yaml' => $this->createFile('shown.yaml', self::VALID_YAML)]);
     $node->save();

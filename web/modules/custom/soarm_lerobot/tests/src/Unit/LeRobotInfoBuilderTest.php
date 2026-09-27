@@ -17,10 +17,16 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('soarm_lerobot')]
 final class LeRobotInfoBuilderTest extends UnitTestCase {
 
+  /**
+   * Returns metadata built around the grasp/move/release phases.
+   */
   private function metadata(): EpisodeMetadata {
     return EpisodeMetadata::fromYaml("robot_type: so-arm101\nfps: 30\ntask: pick\nphases:\n  - name: grasp\n    start_frame: 0\n    end_frame: 40\n  - name: move\n  - name: release\n    start_frame: 121\n    end_frame: 150\n");
   }
 
+  /**
+   * Tests that build() assembles the info document from metadata and URLs.
+   */
   public function testBuildsInfoFromMetadataAndFileUrls(): void {
     $info = (new LeRobotInfoBuilder())->build($this->metadata(), 'http://x/traj.parquet', 'parquet', 'http://x/demo.mp4');
 
@@ -34,12 +40,18 @@ final class LeRobotInfoBuilderTest extends UnitTestCase {
     $this->assertSame(['grasp', 'move', 'release'], array_column($info['phases'], 'name'));
   }
 
+  /**
+   * Tests that total_frames is the last known end_frame plus one.
+   */
   public function testTotalFramesIsTheLastKnownEndFramePlusOne(): void {
     $info = (new LeRobotInfoBuilder())->build($this->metadata(), NULL, NULL, NULL);
 
     $this->assertSame(151, $info['total_frames']);
   }
 
+  /**
+   * Tests that missing trajectory and video files become null.
+   */
   public function testMissingFilesBecomeNull(): void {
     $info = (new LeRobotInfoBuilder())->build($this->metadata(), NULL, NULL, NULL);
 

@@ -34,6 +34,9 @@ phases:
     end_frame: 150
 YAML;
 
+  /**
+   * Tests parsing a valid metadata document.
+   */
   public function testParsesAValidDocument(): void {
     $metadata = EpisodeMetadata::fromYaml(self::VALID);
 
@@ -44,6 +47,9 @@ YAML;
     $this->assertSame(['name' => 'move', 'start_frame' => 41, 'end_frame' => 120], $metadata->phases[1]);
   }
 
+  /**
+   * Tests that extra phases are allowed around the core grasp/move/release.
+   */
   public function testExtraPhasesAreAllowedAroundTheCoreThree(): void {
     $yaml = "robot_type: so-arm100\nfps: 15\nphases:\n  - name: approach\n  - name: grasp\n  - name: move\n  - name: regrasp\n  - name: release\n  - name: retreat\n";
 
@@ -54,6 +60,8 @@ YAML;
   }
 
   /**
+   * Tests that invalid documents report what is wrong.
+   *
    * @param string $yaml
    *   The invalid document.
    * @param string $expectedError
@@ -70,6 +78,9 @@ YAML;
     }
   }
 
+  /**
+   * Data provider for testInvalidDocumentsReportWhatIsWrong().
+   */
   public static function invalidProvider(): array {
     $phases = "phases:\n  - name: grasp\n  - name: move\n  - name: release\n";
     return [
@@ -87,6 +98,9 @@ YAML;
     ];
   }
 
+  /**
+   * Tests that all problems in a document are reported at once.
+   */
   public function testAllProblemsAreReportedAtOnce(): void {
     try {
       EpisodeMetadata::fromYaml("robot_type: ur5\nfps: -1\n");
@@ -97,6 +111,9 @@ YAML;
     }
   }
 
+  /**
+   * Tests that PHP objects embedded in YAML are never instantiated.
+   */
   public function testPhpObjectsInYamlAreNeverInstantiated(): void {
     $this->expectException(InvalidMetadataException::class);
     EpisodeMetadata::fromYaml("robot_type: !php/object 'O:8:\"stdClass\":0:{}'\nfps: 30\n");
