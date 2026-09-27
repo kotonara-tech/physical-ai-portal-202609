@@ -1,0 +1,110 @@
+# SO-ARM Portal の CI。
+#
+# Small と Medium の PHPUnit テスト、phpcs を回します。Large（tests/e2e/ の E2E と
+# GUI）は稼働中のスタックに当てるテストなので、CI では回しません。
+# テストは Dockerfile の app ステージのイメージの中で動かします（手元の
+# workspace-drupal-1 と同じ PHP・vendor）。Kernel テストは SQLite を使うので、
+# DB コンテナも compose も要りません。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    # -eo pipefail が付く。パイプの途中の失敗も落とす
+    shell: bash
+
+env:
+  IMAGE: soarm-app:ci
+
+jobs:
+  small:
+    name: Sizes, Small tests, phpcs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      medium-modules: ${{ steps.modules.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build the app image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: app
+          tags: ${{ env.IMAGE }}
+          load: true
+          cache-from: type=gha,scope=app
+          cache-to: type=gha,scope=app,mode=max
+
+      - name: Every test has a size
+        run: |
+          listed=$(docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --list-tests --exclude-group small,medium,large)
+          untagged=$(grep '^ - ' <<<"$listed" || true)
+          if [ -n "$untagged" ]; then
+            echo "::error::Tests without #[Small], #[Medium] or #[Large] (see CLAUDE.md, test sizes):"
+            echo "$untagged"
+            exit 1
+          fi
+
+      - name: Small tests
+        run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small
+
+      - name: phpcs
+        run: |
+          docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
+
+      - name: List the modules that have Medium tests
+        id: modules
+        run: |
+          listed=$(docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
+          list=$(sed -nE 's/^ - Drupal\\Tests\\([a-z0-9_]+)\\.*/\1/p' <<<"$listed" | sort -u | jq -R . | jq -cs .)
+          echo "Modules: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  medium:
+    # Kernel テストはテストメソッドごとに Drupal をインストールするので遅い。
+    # モジュールごとに別のジョブにして並列で回す。
+    name: Medium tests (${{ matrix.module }})
+    needs: small
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.small.outputs.medium-modules) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build the app image (from the small job's cache)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: app
+          tags: ${{ env.IMAGE }}
+          load: true
+          cache-from: type=gha,scope=app
+
+      - name: Medium tests
+        env:
+          MODULE: ${{ matrix.module }}
+        run: |
+          docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --group medium "web/modules/custom/$MODULE"
