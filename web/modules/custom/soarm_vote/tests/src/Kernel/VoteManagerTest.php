@@ -191,7 +191,7 @@ final class VoteManagerTest extends KernelTestBase {
    * Tests that mostVoted() orders by total votes and skips unvoted posts.
    */
   public function testMostVotedOrdersByTotalVotesAndSkipsUnvoted(): void {
-    $quiet = $this->createPost('quiet');
+    $this->createPost('quiet');
     $some = $this->createPost('some');
     $lots = $this->createPost('lots');
     $alice = $this->createUser();
