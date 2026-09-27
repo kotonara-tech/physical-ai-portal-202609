@@ -74,7 +74,8 @@ jobs:
           echo "list=$list" >> "$GITHUB_OUTPUT"
 
   checks:
-    # 3 つのステップは互いに独立。1 つが落ちても残りは流す（!cancelled()）
+    # 3 つのテストのステップは互いに独立。1 つが落ちても残りは流す。
+    # イメージを読み込めなかった時は、どれも流さない
     name: Sizes, Small tests, phpcs
     needs: build
     runs-on: ubuntu-latest
@@ -86,6 +87,7 @@ jobs:
           path: ${{ runner.temp }}
 
       - name: Load the image
+        id: load
         run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
 
       - name: Every test is Small or Medium
@@ -100,11 +102,11 @@ jobs:
           fi
 
       - name: Small tests
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.load.outcome == 'success' }}
         run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small
 
       - name: phpcs
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.load.outcome == 'success' }}
         run: |
           docker run --rm -u www-data "$IMAGE" \
             vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
