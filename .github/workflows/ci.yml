@@ -74,6 +74,14 @@ jobs:
         run: |
           listed=$(docker run --rm -u www-data "$IMAGE" \
             vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
+          # 名前空間からモジュールが取れないテストは、どの Medium のジョブにも入らない。
+          # 黙って漏らさずに落とす
+          outside=$(grep '^ - ' <<<"$listed" | grep -v -E '^ - Drupal\\Tests\\[a-z0-9_]+\\' || true)
+          if [ -n "$outside" ]; then
+            echo "::error::Medium tests must be in the Drupal\\Tests\\<module>\\ namespace, or no job runs them:"
+            echo "$outside"
+            exit 1
+          fi
           list=$(sed -nE 's/^ - Drupal\\Tests\\([a-z0-9_]+)\\.*/\1/p' <<<"$listed" | sort -u | jq -R . | jq -cs .)
           echo "Modules: $list"
           # 空なら一覧の取り方が壊れている。黙って Medium を飛ばさずに落とす
