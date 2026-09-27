@@ -73,6 +73,11 @@ jobs:
             vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
           list=$(sed -nE 's/^ - Drupal\\Tests\\([a-z0-9_]+)\\.*/\1/p' <<<"$listed" | sort -u | jq -R . | jq -cs .)
           echo "Modules: $list"
+          # 空なら一覧の取り方が壊れている。黙って Medium を飛ばさずに落とす
+          if [ "$list" = "[]" ]; then
+            echo "::error::No module with Medium tests was found."
+            exit 1
+          fi
           echo "list=$list" >> "$GITHUB_OUTPUT"
 
   checks:
@@ -105,7 +110,7 @@ jobs:
 
       - name: Small tests
         if: ${{ !cancelled() && steps.load.outcome == 'success' }}
-        run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small
+        run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small --fail-on-empty-test-suite
 
       - name: phpcs
         if: ${{ !cancelled() && steps.load.outcome == 'success' }}
@@ -121,7 +126,6 @@ jobs:
     # （docs/plan.md）。黙って飛ばすより、落ちて気づくほうを選んでいる。
     name: Medium tests (${{ matrix.module }})
     needs: build
-    if: ${{ needs.build.outputs.medium-modules != '[]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -144,4 +148,4 @@ jobs:
         # 名前空間とフォルダが食い違うテストが一覧と実行のどちらかから漏れる
         run: |
           docker run --rm -u www-data "$IMAGE" \
-            vendor/bin/phpunit -c phpunit.xml --group medium --filter "^Drupal\\\\Tests\\\\${MODULE}\\\\"
+            vendor/bin/phpunit -c phpunit.xml --group medium --fail-on-empty-test-suite --filter "^Drupal\\\\Tests\\\\${MODULE}\\\\"
