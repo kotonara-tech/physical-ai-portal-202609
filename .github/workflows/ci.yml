@@ -140,6 +140,8 @@ jobs:
       - name: Medium tests
         env:
           MODULE: ${{ matrix.module }}
+        # 一覧と同じく、phpunit.xml の testsuite と名前空間で選ぶ。パスで選ぶと、
+        # 名前空間とフォルダが食い違うテストが一覧と実行のどちらかから漏れる
         run: |
           docker run --rm -u www-data "$IMAGE" \
-            vendor/bin/phpunit -c phpunit.xml --group medium "web/modules/custom/$MODULE"
+            vendor/bin/phpunit -c phpunit.xml --group medium --filter "^Drupal\\\\Tests\\\\${MODULE}\\\\"
