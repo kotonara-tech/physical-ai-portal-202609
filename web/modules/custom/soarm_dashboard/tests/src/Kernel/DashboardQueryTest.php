@@ -11,11 +11,13 @@ use Drupal\soarm_dashboard\DashboardQueryInterface;
 use Drupal\Tests\soarm_core\Kernel\SoarmCoreKernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests the three dashboard lists: latest, unresolved issues, popular.
  */
 #[Group('soarm_dashboard')]
+#[Medium]
 final class DashboardQueryTest extends SoarmCoreKernelTestBase {
 
   use UserCreationTrait;
