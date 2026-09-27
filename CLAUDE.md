@@ -1063,7 +1063,21 @@ Kent Beck『Tidy First?』に従います。用語は日本語版に合わせま
 2. 振る舞いの変更は Green になった時点でコミットし、それから構造の変更に移る。
    コミットしていない振る舞いの変更の上で整頓を始めない。
 3. コミットするのは全テストが緑の時だけ。Red だけのコミットはしない。構造の変更の
-   前後で対象モジュールのテストを流す。
+   前後でテストを流す。流す範囲は変更の中身で決める（Kernel はモジュール全体だと
+   1 回数分かかるため）。
+   - コメント・docblock・空白だけの変更: テストは流さない。変えたファイルごとに、
+     コメントと空白を除いた PHP のトークン列が前後で同じことを下のコマンドで確かめる。
+     1 トークンでも違えば、次の 2 つのどちらかで扱う。
+   - テストファイルだけの変更: 変えたテストファイルを 1 つずつ流す
+     （`phpunit -c phpunit.xml web/modules/custom/<module>/tests/src/<Kernel|Unit>/<Name>Test.php`）。
+   - src に触る変更: 対象モジュールのテストを流す。
+   - どの場合も、push の前に、変えたモジュールのテストを 1 回ずつ流す。
+
+   ```sh
+   # 出力が無ければ一致。<path> は repo からの相対パス。コミット前の作業ツリーと HEAD を比べる
+   T='foreach (token_get_all(stream_get_contents(STDIN)) as $t) { if (is_array($t) && in_array($t[0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], TRUE)) { continue; } echo is_array($t) ? token_name($t[0]) . " " . $t[1] : $t, "\n"; }'
+   diff <(git show HEAD:<path> | docker exec -i workspace-drupal-1 php -r "$T") <(docker exec -i workspace-drupal-1 php -r "$T" < <path>)
+   ```
 4. 整頓のタイミングは毎回選ぶ（題名の「?」）。
    - **先に整頓**（First）: 次の振る舞いの変更が楽になるか理解が進み、何をどう整頓するか
      分かっている時。次の Red を書く前に行う。
