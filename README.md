@@ -64,7 +64,7 @@ docker exec -u www-data -w /opt/drupal workspace-drupal-1 \
 
 # コーディング規約
 docker exec -w /opt/drupal workspace-drupal-1 \
-  vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
+  vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom web/themes/custom
 ```
 
 GitHub Actions（`.github/workflows/ci.yml`）が、main への push と PR のたびに

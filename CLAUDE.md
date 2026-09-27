@@ -1233,7 +1233,7 @@ python3 -m pip install -r tests/requirements.txt
 python3 -m pytest -q
 
 # コーディング規約
-docker exec -w /opt/drupal workspace-drupal-1 vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
+docker exec -w /opt/drupal workspace-drupal-1 vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom web/themes/custom
 ```
 
 CI（GitHub Actions、`.github/workflows/ci.yml`）は、main への push と PR のたびに、
