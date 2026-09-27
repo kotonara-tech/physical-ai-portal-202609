@@ -10,12 +10,14 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 
 /**
  * Tests parsing the YAML metadata built around grasp -> move -> release.
  */
 #[CoversClass(EpisodeMetadata::class)]
 #[Group('soarm_lerobot')]
+#[Small]
 final class EpisodeMetadataTest extends UnitTestCase {
 
   private const VALID = <<<YAML

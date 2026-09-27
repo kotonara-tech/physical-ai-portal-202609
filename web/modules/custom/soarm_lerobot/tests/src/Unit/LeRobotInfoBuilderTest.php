@@ -9,12 +9,14 @@ use Drupal\soarm_lerobot\LeRobotInfoBuilder;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 
 /**
  * Tests building the LeRobot "info.json"-like document served by the API.
  */
 #[CoversClass(LeRobotInfoBuilder::class)]
 #[Group('soarm_lerobot')]
+#[Small]
 final class LeRobotInfoBuilderTest extends UnitTestCase {
 
   /**

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\soarm_lerobot\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests that uploaded LeRobot files are validated when a post is saved.
  */
 #[Group('soarm_lerobot')]
+#[Medium]
 final class FileValidationTest extends LeRobotKernelTestBase {
 
   /**

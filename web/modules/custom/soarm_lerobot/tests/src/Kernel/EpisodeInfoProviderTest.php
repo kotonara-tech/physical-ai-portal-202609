@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\soarm_lerobot\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests building the LeRobot info document for a post.
  */
 #[Group('soarm_lerobot')]
+#[Medium]
 final class EpisodeInfoProviderTest extends LeRobotKernelTestBase {
 
   /**
