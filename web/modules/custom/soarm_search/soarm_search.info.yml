@@ -1,0 +1,10 @@
+name: 'SO-ARM Search'
+type: module
+description: 'ロボット知見投稿の全文検索とキーワード/カテゴリ/難易度/機種/結果での絞り込み一覧 (/knowledge) を提供します。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - search_api:search_api
+  - search_api_db:search_api_db
+  - drupal:views
+  - soarm_core:soarm_core

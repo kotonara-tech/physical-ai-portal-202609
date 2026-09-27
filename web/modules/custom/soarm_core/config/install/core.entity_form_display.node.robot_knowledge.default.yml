@@ -1,0 +1,188 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.robot_knowledge.field_calibration
+    - field.field.node.robot_knowledge.field_camera_images
+    - field.field.node.robot_knowledge.field_comments
+    - field.field.node.robot_knowledge.field_difficulty
+    - field.field.node.robot_knowledge.field_difficulty_factors
+    - field.field.node.robot_knowledge.field_difficulty_notes
+    - field.field.node.robot_knowledge.field_environment
+    - field.field.node.robot_knowledge.field_gripper
+    - field.field.node.robot_knowledge.field_hf_repo
+    - field.field.node.robot_knowledge.field_links
+    - field.field.node.robot_knowledge.field_metadata_yaml
+    - field.field.node.robot_knowledge.field_outcome
+    - field.field.node.robot_knowledge.field_procedure
+    - field.field.node.robot_knowledge.field_resolved
+    - field.field.node.robot_knowledge.field_robot_model
+    - field.field.node.robot_knowledge.field_sensors
+    - field.field.node.robot_knowledge.field_task_category
+    - field.field.node.robot_knowledge.field_tech_tags
+    - field.field.node.robot_knowledge.field_trajectory
+    - field.field.node.robot_knowledge.field_video
+    - node.type.robot_knowledge
+  module:
+    - comment
+    - file
+    - image
+    - link
+    - options
+    - text
+id: node.robot_knowledge.default
+targetEntityType: node
+bundle: robot_knowledge
+mode: default
+content:
+  field_calibration:
+    type: string_textarea
+    weight: 15
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_camera_images:
+    type: image_image
+    weight: 11
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_comments:
+    type: comment_default
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_difficulty:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_difficulty_factors:
+    type: entity_reference_autocomplete_tags
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_difficulty_notes:
+    type: string_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_environment:
+    type: string_textarea
+    weight: 16
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_gripper:
+    type: string_textfield
+    weight: 13
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hf_repo:
+    type: string_textfield
+    weight: 18
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_links:
+    type: link_default
+    weight: 19
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_metadata_yaml:
+    type: file_generic
+    weight: 10
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_outcome:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_procedure:
+    type: text_textarea
+    weight: 17
+    region: content
+    settings:
+      rows: 12
+      placeholder: ''
+    third_party_settings: {  }
+  field_resolved:
+    type: boolean_checkbox
+    weight: 7
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_robot_model:
+    type: options_buttons
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_sensors:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_task_category:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_tech_tags:
+    type: entity_reference_autocomplete_tags
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_trajectory:
+    type: file_generic
+    weight: 9
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_video:
+    type: file_generic
+    weight: 8
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+hidden: {  }

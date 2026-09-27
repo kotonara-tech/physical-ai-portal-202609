@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_expertise
+  module:
+    - user
+id: user.user.field_expertise
+field_name: field_expertise
+entity_type: user
+bundle: user
+label: '専門分野'
+description: 'ロボティクスにおける専門分野（任意）。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  max_length: 255
+field_type: string

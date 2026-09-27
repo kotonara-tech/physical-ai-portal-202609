@@ -1,0 +1,8 @@
+name: 'SO-ARM Demo Content'
+type: module
+description: 'サイトを開いてすぐ一覧・検索・ダッシュボードを試せるデモ投稿。アンインストールするとデモ投稿も消えます。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - soarm_core:soarm_core
+  - soarm_lerobot:soarm_lerobot

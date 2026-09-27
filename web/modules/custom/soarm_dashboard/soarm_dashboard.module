@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * SO-ARM Dashboard module.
+ *
+ * Provides the /dashboard page: three lists (popular, latest, unresolved)
+ * built from soarm_core's `robot_knowledge` content type and soarm_vote's
+ * vote counts.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_theme().
+ */
+function soarm_dashboard_theme(): array {
+  return [
+    'soarm_dashboard' => [
+      'variables' => [
+        'popular' => [],
+        'latest' => [],
+        'unresolved' => [],
+      ],
+    ],
+  ];
+}

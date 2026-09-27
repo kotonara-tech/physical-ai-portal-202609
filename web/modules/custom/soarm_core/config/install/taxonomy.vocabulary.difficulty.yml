@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: '難易度'
+vid: difficulty
+description: 'タスクの難易度。'
+weight: 1
+new_revision: false

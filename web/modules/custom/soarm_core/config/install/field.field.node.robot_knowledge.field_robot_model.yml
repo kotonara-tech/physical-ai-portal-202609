@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_robot_model
+    - node.type.robot_knowledge
+    - taxonomy.vocabulary.robot_model
+id: node.robot_knowledge.field_robot_model
+field_name: field_robot_model
+entity_type: node
+bundle: robot_knowledge
+label: 'ロボットモデル'
+description: 'SO-ARM100 / SO-ARM101 / 両方、から選べます。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      robot_model: robot_model
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

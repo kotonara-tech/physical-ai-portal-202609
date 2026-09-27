@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the SO-ARM Core module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ */
+function soarm_core_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  \Drupal::service('soarm_core.default_terms')->install();
+  \Drupal::service('soarm_core.default_permissions')->install();
+}
+
+/**
+ * Grant comment permissions to the built-in roles.
+ */
+function soarm_core_update_11001(): void {
+  \Drupal::service('soarm_core.default_permissions')->install();
+}

@@ -1,0 +1,217 @@
+id: soarm_knowledge
+name: 'SO-ARM Knowledge Index'
+description: 'ロボット知見投稿 (robot_knowledge) の検索インデックス。'
+read_only: false
+field_settings:
+  title:
+    label: Title
+    type: text
+    datasource_id: 'entity:node'
+    property_path: title
+    boost: 8.0
+  procedure_processed:
+    label: '手順（処理済み）'
+    type: text
+    datasource_id: 'entity:node'
+    property_path: 'field_procedure:processed'
+    boost: 2.0
+  field_environment:
+    label: 環境
+    type: text
+    datasource_id: 'entity:node'
+    property_path: field_environment
+  field_difficulty_notes:
+    label: '難しさの補足'
+    type: text
+    datasource_id: 'entity:node'
+    property_path: field_difficulty_notes
+  field_gripper:
+    label: グリッパー
+    type: text
+    datasource_id: 'entity:node'
+    property_path: field_gripper
+  field_sensors:
+    label: センサー
+    type: text
+    datasource_id: 'entity:node'
+    property_path: field_sensors
+  tech_tags_name:
+    label: '技術タグ名'
+    type: text
+    datasource_id: 'entity:node'
+    property_path: 'field_tech_tags:entity:name'
+    boost: 3.0
+    dependencies:
+      config:
+        - field.field.node.robot_knowledge.field_tech_tags
+      module:
+        - taxonomy
+  task_category_name:
+    label: 'カテゴリ名'
+    type: text
+    datasource_id: 'entity:node'
+    property_path: 'field_task_category:entity:name'
+    boost: 3.0
+    dependencies:
+      config:
+        - field.field.node.robot_knowledge.field_task_category
+      module:
+        - taxonomy
+  task_category_label:
+    label: 'カテゴリ表示名'
+    type: string
+    datasource_id: 'entity:node'
+    property_path: 'field_task_category:entity:name'
+    dependencies:
+      config:
+        - field.field.node.robot_knowledge.field_task_category
+      module:
+        - taxonomy
+  field_task_category:
+    label: '作業カテゴリ (ID)'
+    type: integer
+    datasource_id: 'entity:node'
+    property_path: field_task_category
+  field_difficulty:
+    label: '難易度 (ID)'
+    type: integer
+    datasource_id: 'entity:node'
+    property_path: field_difficulty
+  field_robot_model:
+    label: 'ロボットモデル (ID)'
+    type: integer
+    datasource_id: 'entity:node'
+    property_path: field_robot_model
+  field_outcome:
+    label: 結果
+    type: string
+    datasource_id: 'entity:node'
+    property_path: field_outcome
+  field_resolved:
+    label: 解決済み
+    type: boolean
+    datasource_id: 'entity:node'
+    property_path: field_resolved
+  status:
+    label: '公開ステータス'
+    type: boolean
+    datasource_id: 'entity:node'
+    property_path: status
+    indexed_locked: true
+    type_locked: true
+  created:
+    label: '作成日時'
+    type: date
+    datasource_id: 'entity:node'
+    property_path: created
+  uid:
+    label: '投稿者 ID'
+    type: integer
+    datasource_id: 'entity:node'
+    property_path: uid
+  node_grants:
+    label: 'Node access information'
+    type: string
+    property_path: search_api_node_grants
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+processor_settings:
+  entity_status:
+    weights:
+      preprocess_index: -10
+  content_access:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -4
+  html_filter:
+    weights:
+      preprocess_index: -3
+      preprocess_query: -6
+    fields:
+      - title
+      - procedure_processed
+      - field_environment
+      - field_difficulty_notes
+      - field_gripper
+      - field_sensors
+      - tech_tags_name
+      - task_category_name
+    title: true
+    alt: true
+    tags:
+      h1: 5
+      h2: 3
+      h3: 2
+      string: 2
+      b: 2
+  ignorecase:
+    weights:
+      preprocess_index: -5
+      preprocess_query: -8
+    fields:
+      - title
+      - procedure_processed
+      - field_environment
+      - field_difficulty_notes
+      - field_gripper
+      - field_sensors
+      - tech_tags_name
+      - task_category_name
+  tokenizer:
+    weights:
+      preprocess_index: -2
+      preprocess_query: -5
+    fields:
+      - title
+      - procedure_processed
+      - field_environment
+      - field_difficulty_notes
+      - field_gripper
+      - field_sensors
+      - tech_tags_name
+      - task_category_name
+    spaces: ''
+    overlap_cjk: true
+    minimum_word_size: '2'
+options:
+  cron_limit: 50
+  index_directly: true
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - robot_knowledge
+    languages:
+      default: true
+      selected: {  }
+tracker_settings:
+  default: {  }
+server: soarm_db
+status: true
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - soarm_search
+  config:
+    - field.field.node.robot_knowledge.field_difficulty
+    - field.field.node.robot_knowledge.field_difficulty_notes
+    - field.field.node.robot_knowledge.field_environment
+    - field.field.node.robot_knowledge.field_gripper
+    - field.field.node.robot_knowledge.field_outcome
+    - field.field.node.robot_knowledge.field_procedure
+    - field.field.node.robot_knowledge.field_resolved
+    - field.field.node.robot_knowledge.field_robot_model
+    - field.field.node.robot_knowledge.field_sensors
+    - field.field.node.robot_knowledge.field_task_category
+    - field.field.node.robot_knowledge.field_tech_tags
+    - node.type.robot_knowledge
+    - search_api.server.soarm_db
+  module:
+    - node
+    - search_api
+    - taxonomy
+    - text
+    - user

@@ -1,0 +1,20 @@
+id: soarm_db
+name: 'SO-ARM Database Search Server'
+description: 'ロボット知見投稿を検索するためのデータベース検索サーバー。'
+status: true
+backend: search_api_db
+backend_config:
+  database: 'default:default'
+  min_chars: 1
+  matching: partial
+  phrase: bigram
+  autocomplete:
+    suggest_suffix: true
+    suggest_words: true
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - soarm_search
+  module:
+    - search_api_db

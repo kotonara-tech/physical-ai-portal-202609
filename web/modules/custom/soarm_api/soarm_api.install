@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the SO-ARM API module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ *
+ * The jsonapi module ships with `jsonapi.settings:read_only` set to TRUE.
+ * That configuration is owned by the jsonapi module, so soarm_api must not
+ * ship its own copy of it under config/install (that would make soarm_api
+ * "own" another module's config and break on uninstall). Flipping it here,
+ * in hook_install(), is the accepted pattern for adjusting a dependency's
+ * config on install.
+ */
+function soarm_api_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  \Drupal::configFactory()
+    ->getEditable('jsonapi.settings')
+    ->set('read_only', FALSE)
+    ->save();
+}

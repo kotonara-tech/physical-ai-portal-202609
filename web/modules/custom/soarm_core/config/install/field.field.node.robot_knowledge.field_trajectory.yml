@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_trajectory
+    - node.type.robot_knowledge
+  module:
+    - file
+id: node.robot_knowledge.field_trajectory
+field_name: field_trajectory
+entity_type: node
+bundle: robot_knowledge
+label: '軌道データ'
+description: 'LeRobot 形式などの軌道データファイルをアップロードしてください。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: 'soarm/trajectory/[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'hdf5 h5 parquet'
+  max_filesize: ''
+  description_field: false
+field_type: file

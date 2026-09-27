@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the SO-ARM dashboard page.
+ *
+ * Available variables:
+ * - popular: {items: [{link, extra}], empty} - most-voted posts.
+ * - latest: {items: [{link}], empty} - newest posts.
+ * - unresolved: {items: [{link, extra}], empty} - open issues.
+ */
+#}
+<div class="soarm-dashboard">
+
+  <section id="soarm-popular" class="soarm-dashboard__section">
+    <h2>{{ 'Popular'|t }}</h2>
+    {% if popular.items %}
+      <ul>
+        {% for item in popular.items %}
+          <li>{{ item.link }}{% if item.extra %} ({{ item.extra }}){% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ popular.empty }}</p>
+    {% endif %}
+  </section>
+
+  <section id="soarm-latest" class="soarm-dashboard__section">
+    <h2>{{ 'Latest'|t }}</h2>
+    {% if latest.items %}
+      <ul>
+        {% for item in latest.items %}
+          <li>{{ item.link }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ latest.empty }}</p>
+    {% endif %}
+  </section>
+
+  <section id="soarm-unresolved" class="soarm-dashboard__section">
+    <h2>{{ 'Unresolved issues'|t }}</h2>
+    {% if unresolved.items %}
+      <ul>
+        {% for item in unresolved.items %}
+          <li>{{ item.link }}{% if item.extra %} ({{ item.extra }}){% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{{ unresolved.empty }}</p>
+    {% endif %}
+  </section>
+
+</div>

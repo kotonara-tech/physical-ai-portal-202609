@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Displays LeRobot episode metadata for a robot_knowledge post.
+ *
+ * Available variables:
+ * - robot_type: The robot type string (e.g. "so-arm101").
+ * - fps: Frames per second.
+ * - task: An optional free-text task description.
+ * - total_frames: An optional total frame count.
+ * - phases: A list of phases, each with name, start_frame and end_frame.
+ */
+#}
+<div class="soarm-metadata">
+  <dl class="soarm-metadata__summary">
+    <dt>{{ 'Robot type'|t }}</dt>
+    <dd>{{ robot_type }}</dd>
+    <dt>{{ 'Frames per second'|t }}</dt>
+    <dd>{{ fps }}</dd>
+    {% if task %}
+      <dt>{{ 'Task'|t }}</dt>
+      <dd>{{ task }}</dd>
+    {% endif %}
+    {% if total_frames is not null %}
+      <dt>{{ 'Total frames'|t }}</dt>
+      <dd>{{ total_frames }}</dd>
+    {% endif %}
+  </dl>
+  <table class="soarm-metadata__phases">
+    <thead>
+      <tr>
+        <th>{{ 'Phase'|t }}</th>
+        <th>{{ 'Start frame'|t }}</th>
+        <th>{{ 'End frame'|t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for phase in phases %}
+        <tr>
+          <td>{{ phase.name }}</td>
+          <td>{{ phase.start_frame }}</td>
+          <td>{{ phase.end_frame }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

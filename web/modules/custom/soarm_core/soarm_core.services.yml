@@ -1,0 +1,9 @@
+services:
+  soarm_core.default_terms:
+    class: Drupal\soarm_core\DefaultTermsInstaller
+    arguments:
+      - '@entity_type.manager'
+  soarm_core.default_permissions:
+    class: Drupal\soarm_core\DefaultPermissionsInstaller
+    arguments:
+      - '@entity_type.manager'

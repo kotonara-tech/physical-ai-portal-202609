@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_gripper
+    - node.type.robot_knowledge
+id: node.robot_knowledge.field_gripper
+field_name: field_gripper
+entity_type: node
+bundle: robot_knowledge
+label: 'グリッパー'
+description: '使用したグリッパーの種類。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  max_length: 255
+field_type: string

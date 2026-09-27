@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the SO-ARM Vote module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_install().
+ */
+function soarm_vote_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+  if ($role !== NULL) {
+    $role->grantPermission('cast soarm votes');
+    $role->save();
+  }
+}

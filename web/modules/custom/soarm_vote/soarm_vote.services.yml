@@ -1,0 +1,5 @@
+services:
+  soarm_vote.manager:
+    class: Drupal\soarm_vote\VoteManager
+    arguments: ['@entity_type.manager', '@cache_tags.invalidator']
+  Drupal\soarm_vote\VoteManagerInterface: '@soarm_vote.manager'

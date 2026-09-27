@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'ロボットモデル'
+vid: robot_model
+description: '対象のロボットモデル（SO-ARM100 / SO-ARM101 など）。'
+weight: 2
+new_revision: false

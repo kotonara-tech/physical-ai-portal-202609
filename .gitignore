@@ -63,3 +63,60 @@
 /drush
 /drupal.phar
 /drupal
+
+# ===== SO-ARM ポータル固有 =====
+# .env には秘密情報が入りうるためコミットしない（.env.production なども含む）。
+# 見本だけは追跡する（.dockerignore と揃える）
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Claude Code の個人設定（.claude/agents/ などの共有する定義は追跡する）
+/.claude/settings.local.json
+/CLAUDE.local.md
+
+# 鍵（simple_oauth の RSA 鍵など）
+*.key
+*.pem
+
+# DB ダンプ（drush sql:dump の出力。ユーザーのパスワードハッシュを含む）
+*.sql
+*.sql.gz
+
+# 大容量データ（LeRobot のデータセットや動画）。小さなテスト用 fixture だけ許可する
+*.mp4
+*.h5
+*.hdf5
+*.parquet
+!tests/fixtures/**
+
+# 将来の React / Vue、Python の仮想環境
+node_modules/
+.venv/
+
+# web/ 配下は custom のコードだけ追跡し、core / contrib / sites はイメージ側にある
+/web/*
+!/web/modules/
+/web/modules/*
+!/web/modules/custom/
+!/web/themes/
+/web/themes/*
+!/web/themes/custom/
+
+# MySQL / MariaDB のデータ・ダンプ（バインドマウント）
+/mysql/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / エディタ / ログ
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+*.log

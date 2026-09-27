@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_task_category
+    - node.type.robot_knowledge
+    - taxonomy.vocabulary.task_category
+id: node.robot_knowledge.field_task_category
+field_name: field_task_category
+entity_type: node
+bundle: robot_knowledge
+label: '作業カテゴリ'
+description: 'このロボット知見が扱う作業の種類を選んでください。'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      task_category: task_category
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

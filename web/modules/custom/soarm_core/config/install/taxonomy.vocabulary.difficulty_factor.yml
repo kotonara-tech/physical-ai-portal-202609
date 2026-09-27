@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: '難しさの要因'
+vid: difficulty_factor
+description: 'タスクを難しくしている具体的な要因の一覧。'
+weight: 4
+new_revision: false

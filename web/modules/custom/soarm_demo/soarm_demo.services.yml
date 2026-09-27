@@ -1,0 +1,8 @@
+services:
+  soarm_demo.content:
+    class: Drupal\soarm_demo\DemoContent
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.usage'
+  Drupal\soarm_demo\DemoContent: '@soarm_demo.content'

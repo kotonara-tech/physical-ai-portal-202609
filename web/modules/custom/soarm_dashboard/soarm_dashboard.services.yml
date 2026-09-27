@@ -1,0 +1,5 @@
+services:
+  soarm_dashboard.query:
+    class: Drupal\soarm_dashboard\DashboardQuery
+    arguments: ['@entity_type.manager', '@soarm_vote.manager']
+  Drupal\soarm_dashboard\DashboardQueryInterface: '@soarm_dashboard.query'

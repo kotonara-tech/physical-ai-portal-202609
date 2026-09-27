@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_environment
+    - node.type.robot_knowledge
+id: node.robot_knowledge.field_environment
+field_name: field_environment
+entity_type: node
+bundle: robot_knowledge
+label: '環境'
+description: '作業環境（照明、背景、対象物の配置など）。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

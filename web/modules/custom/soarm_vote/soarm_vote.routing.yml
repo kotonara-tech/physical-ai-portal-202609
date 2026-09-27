@@ -1,0 +1,30 @@
+soarm_vote.api.counts:
+  path: '/api/soarm/vote/{node}'
+  defaults:
+    _controller: '\Drupal\soarm_vote\Controller\VoteApiController::counts'
+  methods: [GET]
+  requirements:
+    _entity_access: 'node.view'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+    _auth: ['basic_auth', 'cookie']
+
+soarm_vote.api.cast:
+  path: '/api/soarm/vote/{node}'
+  defaults:
+    _controller: '\Drupal\soarm_vote\Controller\VoteApiController::cast'
+  methods: [POST, DELETE]
+  requirements:
+    _entity_access: 'node.view'
+    _permission: 'cast soarm votes'
+    _user_is_logged_in: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+    _auth: ['basic_auth', 'cookie']

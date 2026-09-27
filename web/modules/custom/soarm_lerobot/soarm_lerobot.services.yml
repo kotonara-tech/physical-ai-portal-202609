@@ -1,0 +1,9 @@
+services:
+  soarm_lerobot.trajectory_format_detector:
+    class: Drupal\soarm_lerobot\TrajectoryFormatDetector
+  soarm_lerobot.info_builder:
+    class: Drupal\soarm_lerobot\LeRobotInfoBuilder
+  soarm_lerobot.episode_info:
+    class: Drupal\soarm_lerobot\EpisodeInfoProvider
+    arguments: ['@soarm_lerobot.info_builder', '@soarm_lerobot.trajectory_format_detector']
+  Drupal\soarm_lerobot\EpisodeInfoProvider: '@soarm_lerobot.episode_info'

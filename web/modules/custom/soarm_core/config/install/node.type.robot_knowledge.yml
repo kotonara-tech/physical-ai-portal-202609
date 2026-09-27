@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'ロボット知見投稿'
+type: robot_knowledge
+description: 'SO-ARM でのタスク実行結果や、うまくいかなかった知見を記録するコンテンツタイプです。'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

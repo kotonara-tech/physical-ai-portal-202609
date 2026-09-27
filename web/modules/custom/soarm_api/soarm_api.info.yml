@@ -1,0 +1,10 @@
+name: 'SO-ARM API'
+type: module
+description: 'JSON:API での SO-ARM 知見投稿の読み書き（Basic 認証・ファイルアップロード）を有効化します。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - drupal:jsonapi
+  - drupal:basic_auth
+  - drupal:serialization
+  - soarm_core:soarm_core

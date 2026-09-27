@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_affiliation
+  module:
+    - user
+id: user.user.field_affiliation
+field_name: field_affiliation
+entity_type: user
+bundle: user
+label: '所属'
+description: '所属団体・組織（任意）。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  max_length: 255
+field_type: string

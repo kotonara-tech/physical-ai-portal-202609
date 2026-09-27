@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: '技術タグ'
+vid: tech_tags
+description: '使用した技術・ソフトウェア・手法のタグ。自由に追加できます。'
+weight: 3
+new_revision: false

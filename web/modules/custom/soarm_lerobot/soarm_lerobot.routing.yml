@@ -1,0 +1,14 @@
+soarm_lerobot.info:
+  path: '/api/soarm/lerobot/{node}'
+  defaults:
+    _controller: '\Drupal\soarm_lerobot\Controller\LeRobotInfoController::info'
+  requirements:
+    _entity_access: 'node.view'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+    _auth:
+      - basic_auth
+      - cookie

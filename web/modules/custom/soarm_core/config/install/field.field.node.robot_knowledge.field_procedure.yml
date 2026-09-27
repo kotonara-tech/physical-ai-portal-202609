@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_procedure
+    - filter.format.soarm_markdown
+    - node.type.robot_knowledge
+  module:
+    - text
+id: node.robot_knowledge.field_procedure
+field_name: field_procedure
+entity_type: node
+bundle: robot_knowledge
+label: '手順'
+description: 'Markdown 記法で手順を記述できます。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - soarm_markdown
+field_type: text_long

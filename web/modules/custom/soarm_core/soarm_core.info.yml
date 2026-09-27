@@ -1,0 +1,16 @@
+name: 'SO-ARM Core'
+type: module
+description: 'ロボット知見投稿のコンテンツモデル（コンテンツタイプ・語彙・Markdown フィルタ・ロール）。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:taxonomy
+  - drupal:comment
+  - drupal:file
+  - drupal:image
+  - drupal:link
+  - drupal:options
+  - drupal:text
+  - drupal:filter
+  - drupal:user

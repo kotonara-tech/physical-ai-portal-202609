@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * SO-ARM API module.
+ *
+ * Exposes the `robot_knowledge` content type (defined by soarm_core) for
+ * read and write access through Drupal core's JSON:API module, so that
+ * external clients (ROS2 nodes, the LeRobot upload scripts, browser
+ * front-ends, etc.) can list, create, update and delete knowledge posts
+ * without a custom REST controller.
+ *
+ * Endpoints (all under the site base URL, e.g. http://localhost:8080):
+ *
+ * - GET  /jsonapi/node/robot_knowledge
+ *     List/filter knowledge posts. Anonymous users can read published
+ *     posts (the `access content` permission, already granted to the
+ *     anonymous role by the standard install profile, is sufficient).
+ *     Example: filter by title
+ *       curl -H "Accept: application/vnd.api+json" \
+ *         "http://localhost:8080/jsonapi/node/robot_knowledge?filter[title]=Dishwasher"
+ *
+ * - GET  /jsonapi/node/robot_knowledge/{uuid}
+ *     Read a single post.
+ *
+ * - POST /jsonapi/node/robot_knowledge
+ *     Create a post. Requires a user with the `create robot_knowledge
+ *     content` permission (granted to the `soarm_contributor` role by
+ *     soarm_core) authenticated with HTTP Basic auth (provided by core's
+ *     basic_auth module), and a `Content-Type: application/vnd.api+json`
+ *     body describing the node's attributes/relationships.
+ *       curl -u contributor:password \
+ *         -H "Content-Type: application/vnd.api+json" \
+ *         -H "Accept: application/vnd.api+json" \
+ *         -d '{"data":{"type":"node--robot_knowledge",' \
+ *            '"attributes":{"title":"...","field_outcome":"success"},' \
+ *            '"relationships":{...}}}' \
+ *         http://localhost:8080/jsonapi/node/robot_knowledge
+ *
+ * - PATCH/DELETE /jsonapi/node/robot_knowledge/{uuid}
+ *     Update or delete a post the user owns (or has permission to edit).
+ *
+ * - POST /jsonapi/node/robot_knowledge/{field}
+ *     Upload a binary file (video, calibration data, trajectory data,
+ *     camera images, ...) to one of the node's file fields ahead of
+ *     creating/updating the node itself. The response's `data.id` is the
+ *     file UUID to reference from a `relationships.{field}` block on a
+ *     subsequent node create/update request.
+ *       curl -u contributor:password \
+ *         -H "Content-Type: application/octet-stream" \
+ *         -H 'Content-Disposition: file; filename="episode_001.mp4"' \
+ *         --data-binary @episode_001.mp4 \
+ *         http://localhost:8080/jsonapi/node/robot_knowledge/field_video
+ *
+ * `hook_install()` in soarm_api.install flips core's
+ * `jsonapi.settings:read_only` flag to FALSE (that config is owned by the
+ * jsonapi module, so soarm_api must not ship its own copy of it under
+ * config/install; adjusting it in hook_install() is the accepted pattern).
+ *
+ * EXTENSION POINT (WebSocket/SSE): a real-time "new post" push channel for
+ * dashboards or ROS2 subscribers would hook into
+ * hook_ENTITY_TYPE_insert() for `node` (bundle `robot_knowledge`) — right
+ * after JSON:API commits the new node, that hook would serialize the node
+ * and publish it to a Mercure hub or an SSE endpoint (e.g. via an injected
+ * HTTP client service), so subscribers receive the post without polling
+ * the collection endpoint. No such hook is implemented yet.
+ */
+
+declare(strict_types=1);

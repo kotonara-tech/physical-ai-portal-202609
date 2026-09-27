@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the SO-ARM Demo Content module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ */
+function soarm_demo_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  \Drupal::service('soarm_demo.content')->install();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function soarm_demo_uninstall(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+
+  \Drupal::service('soarm_demo.content')->remove();
+}

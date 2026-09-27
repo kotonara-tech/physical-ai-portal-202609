@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: '作業カテゴリ'
+vid: task_category
+description: 'ロボット知見が扱う作業の種類。'
+weight: 0
+new_revision: false

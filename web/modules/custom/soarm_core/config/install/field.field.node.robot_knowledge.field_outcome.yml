@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_outcome
+    - node.type.robot_knowledge
+  module:
+    - options
+id: node.robot_knowledge.field_outcome
+field_name: field_outcome
+entity_type: node
+bundle: robot_knowledge
+label: '結果'
+description: 'タスクの結果を選んでください。'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

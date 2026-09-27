@@ -1,0 +1,4 @@
+soarm_dashboard.page:
+  title: 'Dashboard'
+  route_name: soarm_dashboard.page
+  menu_name: main

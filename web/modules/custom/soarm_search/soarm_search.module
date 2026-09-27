@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * SO-ARM Search module.
+ *
+ * Provides:
+ * - `search_api.server.soarm_db`: a Database Search Server (search_api_db)
+ *   with `matching: partial` so any substring of an indexed word matches.
+ * - `search_api.index.soarm_knowledge`: indexes `robot_knowledge` nodes
+ *   (title, procedure text, environment/gripper/sensors/difficulty notes,
+ *   tag and category names) for fulltext search, plus filterable fields
+ *   (category, difficulty, robot model, outcome, resolved, dates, author,
+ *   node access grants). `options.index_directly: true` means a post is
+ *   searchable immediately after the request that created it, no cron
+ *   wait required.
+ * - `views.view.soarm_knowledge`: the `/knowledge` page listing posts
+ *   (rendered in the node's `teaser` view mode, falling back to
+ *   `default` since no dedicated teaser display is defined), with
+ *   exposed, optional filters `keys` (fulltext), `category`
+ *   (field_task_category), `difficulty`, `model` (field_robot_model) and
+ *   `outcome` (field_outcome). Views result caching is disabled
+ *   (`search_api_none`) so anonymous visitors see a new post right away.
+ *
+ * Re-indexing (e.g. after changing the index configuration, or to index
+ * content that existed before this module was installed):
+ *
+ *   docker exec -u www-data workspace-drupal-1 \
+ *     drush search-api:index soarm_knowledge
+ *
+ * Other useful commands:
+ *
+ *   docker exec -u www-data workspace-drupal-1 drush search-api:status
+ *   docker exec -u www-data workspace-drupal-1 \
+ *     drush search-api:clear soarm_knowledge
+ */
+
+declare(strict_types=1);

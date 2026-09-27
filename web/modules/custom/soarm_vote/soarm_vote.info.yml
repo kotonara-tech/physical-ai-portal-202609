@@ -1,0 +1,8 @@
+name: 'SO-ARM Vote'
+type: module
+description: '知見投稿への投票（有用性／改善提案／追試）。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:user

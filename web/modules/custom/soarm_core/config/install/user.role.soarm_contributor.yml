@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.soarm_markdown
+    - node.type.robot_knowledge
+  module:
+    - comment
+    - filter
+    - node
+id: soarm_contributor
+label: 'SO-ARM 投稿者'
+weight: 3
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'create robot_knowledge content'
+  - 'delete own robot_knowledge content'
+  - 'edit own robot_knowledge content'
+  - 'post comments'
+  - 'skip comment approval'
+  - 'use text format soarm_markdown'

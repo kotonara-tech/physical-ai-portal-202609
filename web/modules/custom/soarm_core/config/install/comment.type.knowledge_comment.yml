@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: knowledge_comment
+label: 'ロボット知見へのコメント'
+target_entity_type_id: node
+description: 'ロボット知見投稿に対するコメント。'

@@ -1,0 +1,7 @@
+name: 'SO-ARM LeRobot'
+type: module
+description: 'LeRobot 互換データ（HDF5 / Parquet + YAML メタデータ）の検証と API 出力。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - soarm_core:soarm_core

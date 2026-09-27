@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Displays the vote counts for a robot_knowledge post.
+ *
+ * Available variables:
+ * - nid: The node ID the votes belong to.
+ * - counts: An array with the keys "useful", "improvement" and
+ *   "replication", each mapped to an integer vote count.
+ */
+#}
+<div class="soarm-votes" data-soarm-votes-node="{{ nid }}">
+  <span class="soarm-votes__item" data-soarm-vote="useful"><span class="soarm-votes__label">{{ 'Useful'|t }}</span> <span data-soarm-vote-count>{{ counts.useful }}</span></span>
+  <span class="soarm-votes__item" data-soarm-vote="improvement"><span class="soarm-votes__label">{{ 'Improvement idea'|t }}</span> <span data-soarm-vote-count>{{ counts.improvement }}</span></span>
+  <span class="soarm-votes__item" data-soarm-vote="replication"><span class="soarm-votes__label">{{ 'Replicated'|t }}</span> <span data-soarm-vote-count>{{ counts.replication }}</span></span>
+</div>

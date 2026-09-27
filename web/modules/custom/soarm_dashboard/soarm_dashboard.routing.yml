@@ -1,0 +1,7 @@
+soarm_dashboard.page:
+  path: '/dashboard'
+  defaults:
+    _controller: '\Drupal\soarm_dashboard\Controller\DashboardController::page'
+    _title: 'Dashboard'
+  requirements:
+    _permission: 'access content'

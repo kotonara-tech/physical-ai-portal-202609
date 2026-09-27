@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - soarm_core
+name: 'SO-ARM Markdown'
+format: soarm_markdown
+weight: 0
+roles:
+  - soarm_contributor
+filters:
+  soarm_markdown:
+    id: soarm_markdown
+    provider: soarm_core
+    status: true
+    weight: 0
+    settings: {  }

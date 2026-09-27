@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+!.env.sample
+mysql
+vendor
+tests
+docs
+*.log
+**/node_modules

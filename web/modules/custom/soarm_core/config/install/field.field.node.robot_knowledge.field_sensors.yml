@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sensors
+    - node.type.robot_knowledge
+id: node.robot_knowledge.field_sensors
+field_name: field_sensors
+entity_type: node
+bundle: robot_knowledge
+label: 'センサー'
+description: '使用したセンサー（カメラ、力覚センサーなど）。'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  max_length: 255
+field_type: string

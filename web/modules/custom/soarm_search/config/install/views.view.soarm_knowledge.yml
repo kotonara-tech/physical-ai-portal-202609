@@ -1,0 +1,373 @@
+id: soarm_knowledge
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - soarm_search
+  module:
+    - search_api
+    - user
+  config:
+    - search_api.index.soarm_knowledge
+label: 'ロボット知見投稿一覧'
+module: views
+description: 'ロボット知見投稿をキーワード・カテゴリ・難易度・機種・結果で絞り込める一覧ページ。'
+tag: ''
+base_table: search_api_index_soarm_knowledge
+base_field: search_api_id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      title: Knowledge
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: search_api_none
+        options: {  }
+      query:
+        type: search_api_query
+        options: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: 20
+          offset: 0
+          id: 0
+          total_pages: null
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 20, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+      style:
+        type: default
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:node':
+              ':default': teaser
+      filters:
+        keys:
+          id: keys
+          table: search_api_index_soarm_knowledge
+          field: search_api_fulltext
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: and
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'キーワード検索'
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: keys
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          parse_mode: terms
+          min_length: 1
+          fields: {  }
+          plugin_id: search_api_fulltext
+        field_task_category:
+          id: field_task_category
+          table: search_api_index_soarm_knowledge
+          field: field_task_category
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 作業カテゴリ
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: category
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: task_category
+          hierarchy: false
+          error_message: true
+          plugin_id: search_api_term
+        field_difficulty:
+          id: field_difficulty
+          table: search_api_index_soarm_knowledge
+          field: field_difficulty
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 難易度
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: difficulty
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: difficulty
+          hierarchy: false
+          error_message: true
+          plugin_id: search_api_term
+        field_robot_model:
+          id: field_robot_model
+          table: search_api_index_soarm_knowledge
+          field: field_robot_model
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: ロボットモデル
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: model
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: robot_model
+          hierarchy: false
+          error_message: true
+          plugin_id: search_api_term
+        field_outcome:
+          id: field_outcome
+          table: search_api_index_soarm_knowledge
+          field: field_outcome
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 結果
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: outcome
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: search_api_options
+      sorts:
+        search_api_relevance:
+          id: search_api_relevance
+          table: search_api_index_soarm_knowledge
+          field: search_api_relevance
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
+        created:
+          id: created
+          table: search_api_index_soarm_knowledge
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
+      header: {  }
+      footer: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          content:
+            value: '条件に一致する投稿がまだありません。'
+            format: basic_html
+          tokenize: false
+          plugin_id: text
+      relationships: {  }
+      arguments: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      cacheable: false
+      max-age: 0
+      tags: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: knowledge
+      menu:
+        type: normal
+        title: Knowledge
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 0
+        menu_name: main
+        context: '0'
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      cacheable: false
+      max-age: 0
+      tags: {  }

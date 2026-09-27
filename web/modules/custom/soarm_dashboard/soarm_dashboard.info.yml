@@ -1,0 +1,8 @@
+name: 'SO-ARM Dashboard'
+type: module
+description: 'ダッシュボード（人気・最新・未解決課題）。'
+package: 'SO-ARM Portal'
+core_version_requirement: ^11
+dependencies:
+  - soarm_core:soarm_core
+  - soarm_vote:soarm_vote
