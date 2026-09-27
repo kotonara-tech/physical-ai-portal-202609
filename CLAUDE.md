@@ -1029,6 +1029,13 @@ contrib は search_api / search_api_db が有効、facets・flag・s3fs・simple
 
 ## 開発ルール
 
+### 計画と TODO の書き方
+
+- 計画・TODO リスト・報告の項目に、独自の番号や記号（`P0`、`P1-2`、`Phase 1`、`T3` など）を
+  振らない。項目は内容を表す名前で呼び、順序は並び順で表す。
+- 仕様書などの一次資料が振った番号を引くときは、その資料の見出しや文言を添える。
+- 開発計画は `docs/plan.md`。
+
 ### TDD（Red → Green → Refactor）
 
 実装コードは Kent Beck / t_wada の TDD で書きます。「急いでいる」「簡単だから」は
@@ -1324,16 +1331,5 @@ docs: record commit message rules in CLAUDE.md
 
 ## 残スコープ
 
-実装ステップのうち、まだ作っていないものです。順序は未承認なので、着手する前に
-ユーザーに確かめてください。
-
-```text
-ブックマーク + 履歴（flag）
-Project（プロジェクト管理）
-サブテーマ + WCAG 2.1 AA
-OAuth2（simple_oauth）
-React / Vue のフロント統合
-多言語（日本語／英語）
-S3 互換ストレージ（s3fs + minio）
-ドキュメント（OpenAPI など）+ CI
-```
+残タスク・順序・仕様からの逸脱は `docs/plan.md`（開発計画）にまとめています。
+順序が未承認の項目は、着手する前にユーザーに確かめてください。
