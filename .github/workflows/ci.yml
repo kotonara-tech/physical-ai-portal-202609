@@ -19,9 +19,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  # PR は新しい push で古い実行を止める。main は push ごとに結果を残す
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # PR は新しい push で古い実行を止める。main は push ごとに別のグループにして、
+  # どの push の結果も残す（同じグループだと、待機中の実行は新しい実行に取り消される）
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
 
 defaults:
   run:
