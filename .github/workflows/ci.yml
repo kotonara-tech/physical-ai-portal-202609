@@ -60,6 +60,8 @@ jobs:
           name: soarm-app
           path: ${{ runner.temp }}/soarm-app.tar
           retention-days: 1
+          # レイヤーは圧縮済みなので、zip で圧縮し直さない
+          compression-level: 0
 
       - name: Load the image
         run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
