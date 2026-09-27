@@ -8,7 +8,8 @@
 # DB コンテナも compose も要りません。
 #
 # イメージは build ジョブで 1 回だけ作り、artifact で後のジョブに渡します。
-# どのジョブも同じイメージでテストし、Medium は Small や phpcs の結果を待ちません。
+# どのジョブも同じイメージでテストします。checks（サイズの検査・Small・phpcs）と
+# modules → medium は互いを待ちません。
 name: CI
 
 on:
@@ -38,8 +39,6 @@ jobs:
     name: Build the app image
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    outputs:
-      medium-modules: ${{ steps.modules.outputs.list }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -66,6 +65,20 @@ jobs:
           retention-days: 1
           # レイヤーは圧縮済みなので、zip で圧縮し直さない
           compression-level: 0
+
+  modules:
+    # Medium のテストを持つモジュールを一覧にする。検査が落ちても、checks は止めない
+    name: List the Medium modules
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      medium-modules: ${{ steps.modules.outputs.list }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: soarm-app
+          path: ${{ runner.temp }}
 
       - name: Load the image
         run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
@@ -137,13 +150,13 @@ jobs:
     # 最初の Functional テストと一緒に、compose を使うジョブを足して Functional をそちらへ移す
     # （docs/plan.md）。黙って飛ばすより、落ちて気づくほうを選んでいる。
     name: Medium tests (${{ matrix.module }})
-    needs: build
+    needs: modules
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        module: ${{ fromJSON(needs.build.outputs.medium-modules) }}
+        module: ${{ fromJSON(needs.modules.outputs.medium-modules) }}
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
