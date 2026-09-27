@@ -152,6 +152,20 @@ jobs:
             exit 1
           fi
 
+      - name: No Functional tests until CI can serve them
+        if: ${{ !cancelled() && steps.load.outcome == 'success' }}
+        run: |
+          # Functional（BrowserTestBase）は nginx 越しに HTTP で当てるが、この CI は nginx を
+          # 起動しない。Medium のジョブで接続エラーとして落ちる前に、理由をはっきり示す
+          listed=$(docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --list-tests --testsuite functional)
+          found=$(grep '^ - ' <<<"$listed" || true)
+          if [ -n "$found" ]; then
+            echo "::error::Functional tests need nginx, which CI does not start yet. Add the compose-based job planned in docs/plan.md in the same PR:"
+            echo "$found"
+            exit 1
+          fi
+
       - name: Small tests
         if: ${{ !cancelled() && steps.load.outcome == 'success' }}
         run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small --fail-on-empty-test-suite
@@ -166,8 +180,8 @@ jobs:
     # Kernel テストはテストメソッドごとに Drupal をインストールするので遅い。
     # モジュールごとに別のジョブにして並列で回す。
     # Functional（BrowserTestBase）も #[Medium] なのでこのジョブに来るが、nginx が無いので落ちる。
-    # 最初の Functional テストと一緒に、compose を使うジョブを足して Functional をそちらへ移す
-    # （docs/plan.md）。黙って飛ばすより、落ちて気づくほうを選んでいる。
+    # checks の「No Functional tests until CI can serve them」が理由を示す。最初の Functional
+    # テストと一緒に、compose を使うジョブを足して Functional をそちらへ移す（docs/plan.md）。
     name: Medium tests (${{ matrix.module }})
     needs: modules
     runs-on: ubuntu-latest
