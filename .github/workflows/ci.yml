@@ -116,8 +116,9 @@ jobs:
   medium:
     # Kernel テストはテストメソッドごとに Drupal をインストールするので遅い。
     # モジュールごとに別のジョブにして並列で回す。
-    # Functional（BrowserTestBase）は nginx が要るので、このジョブでは動かない。
-    # 最初の Functional テストと一緒に compose を使うジョブを足す（docs/plan.md）。
+    # Functional（BrowserTestBase）も #[Medium] なのでこのジョブに来るが、nginx が無いので落ちる。
+    # 最初の Functional テストと一緒に、compose を使うジョブを足して Functional をそちらへ移す
+    # （docs/plan.md）。黙って飛ばすより、落ちて気づくほうを選んでいる。
     name: Medium tests (${{ matrix.module }})
     needs: build
     if: ${{ needs.build.outputs.medium-modules != '[]' }}
