@@ -1306,6 +1306,23 @@ build(docker): add pcntl for PHPUnit time limits
 docs: record commit message rules in CLAUDE.md
 ```
 
+### プルリクエスト
+
+- 説明文は**日本語**で、`.github/pull_request_template.md` の見出しに沿って書く。
+  タイトルは上のコミットメッセージと同じ規約（英語・Conventional Commits）。
+- 1 行目のタイトルだけで何をするかが分かるようにする。本文には何を・なぜを書き、
+  ほかの案を選ばなかった理由と既知の制限も書く。リンク先が読めなくても分かるようにする。
+- 構造の変更と振る舞いの変更を同じ PR に混ぜない（上の「Tidy First」）。
+- 元に戻しにくい変更（画面・API・データモデル）は、テンプレートの該当欄で明示する。
+- マージの前に、説明文が最終的な変更と合っているか見直す。
+
+出典:
+
+- GitHub Docs「Creating a pull request template for your repository」: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository
+- Google Engineering Practices「Writing good CL descriptions」: https://google.github.io/eng-practices/review/developer/cl-descriptions.html
+- Drupal「Issue summary template -- bare」（Problem/Motivation・Proposed resolution・Remaining tasks・User interface changes・API changes・Data model changes）: https://www.drupal.org/docs/develop/issues/fields-and-other-parts-of-an-issue/special-issue-summary-templates/issue-summary-template-bare
+- Kent Beck「Structure and Behavior PRs」: https://newsletter.kentbeck.com/p/structure-and-behavior-prs
+
 ## Drupal 11 の追加の注意
 
 上の「Drupal コーディング方針」に足す注意です。
