@@ -24,6 +24,9 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
    */
   protected static $modules = ['soarm_vote', 'soarm_dashboard'];
 
+  /**
+   * The dashboard query service under test.
+   */
   private DashboardQueryInterface $dashboard;
 
   /**
@@ -49,6 +52,9 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
     return $node;
   }
 
+  /**
+   * Tests that latest() orders posts newest first and respects the limit.
+   */
   public function testLatestIsNewestFirstAndLimited(): void {
     $old = $this->createPost(['created' => 1000]);
     $new = $this->createPost(['created' => 3000]);
@@ -58,6 +64,9 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
     $this->assertSame([(int) $new->id(), (int) $mid->id()], $this->dashboard->latest(2));
   }
 
+  /**
+   * Tests that latest() skips unpublished posts.
+   */
   public function testLatestSkipsUnpublishedAndOtherContentTypes(): void {
     $this->createPost(['status' => 0]);
     $visible = $this->createPost();
@@ -65,6 +74,9 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
     $this->assertSame([(int) $visible->id()], $this->dashboard->latest(10));
   }
 
+  /**
+   * Tests that unresolved() excludes successful and resolved posts.
+   */
   public function testUnresolvedMeansNotSuccessfulAndNotResolved(): void {
     $this->createPost(['field_outcome' => 'success']);
     $this->createPost(['field_outcome' => 'failure', 'field_resolved' => TRUE]);
@@ -74,18 +86,27 @@ final class DashboardQueryTest extends SoarmCoreKernelTestBase {
     $this->assertSame([(int) $partial->id(), (int) $failure->id()], $this->dashboard->unresolved(10));
   }
 
+  /**
+   * Tests that unresolved() includes posts where "resolved" was never set.
+   */
   public function testUnresolvedIncludesPostsWhereResolvedWasNeverSet(): void {
     $never_set = $this->createPost(['field_outcome' => 'failure']);
 
     $this->assertSame([(int) $never_set->id()], $this->dashboard->unresolved(10));
   }
 
+  /**
+   * Tests that unresolved() skips unpublished posts.
+   */
   public function testUnresolvedSkipsUnpublished(): void {
     $this->createPost(['field_outcome' => 'failure', 'status' => 0]);
 
     $this->assertSame([], $this->dashboard->unresolved(10));
   }
 
+  /**
+   * Tests that popular() orders by vote count and skips unpublished posts.
+   */
   public function testPopularOrdersByVotesAndSkipsUnpublished(): void {
     $votes = $this->container->get('soarm_vote.manager');
     $alice = $this->createUser();
