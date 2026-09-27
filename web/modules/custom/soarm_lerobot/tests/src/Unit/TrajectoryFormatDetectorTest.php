@@ -8,12 +8,14 @@ use Drupal\soarm_lerobot\TrajectoryFormatDetector;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests detecting HDF5 / Parquet by magic bytes (not by file extension).
  */
 #[CoversClass(TrajectoryFormatDetector::class)]
 #[Group('soarm_lerobot')]
+#[Medium]
 final class TrajectoryFormatDetectorTest extends UnitTestCase {
 
   /**
