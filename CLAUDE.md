@@ -1192,7 +1192,8 @@ Playwright（GUI の Large テスト）:
 - サイズは置き場所ではなく、実行時に使う資源で決めます。`tests/src/Unit` にあっても
   一時ファイルを書くテストは Medium です（例: soarm_lerobot の `TrajectoryFormatDetectorTest`）。
 - CI（`.github/workflows/ci.yml`）の「Every test is Small or Medium」が、印の無い
-  テストと `#[Large]` のテストを見つけると落ちます。印が合っているか（Small なのに
+  テストと `#[Large]` のテストを見つけると落ちます。見るのは `phpunit.xml` の testsuite
+  （各モジュールの `tests/src/Unit`・`Kernel`・`Functional`）にあるテストだけです。印が合っているか（Small なのに
   ファイルを使っていないか）までは確かめないので、レビューで見ます。
 - コンテナに `pcntl` 拡張が無いので、サイズ別の時間制限（`--enforce-time-limit`）は
   今は効きません。有効にするには Dockerfile の変更と再 build が要ります（別タスク）。
