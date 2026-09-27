@@ -1222,8 +1222,11 @@ docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c 
 # Medium 全部
 docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --group medium
 
-# 1 モジュールだけ。SQLite のパスはモジュールごとに分ける
+# 1 モジュールだけ（Small も Medium も、フォルダで選ぶ）。SQLite のパスはモジュールごとに分ける
 docker exec -u www-data -e SIMPLETEST_DB=sqlite://localhost//tmp/<module>.sqlite -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml web/modules/custom/<module>
+
+# CI の Medium のジョブと同じ選び方（testsuite + 名前空間）
+docker exec -u www-data -e SIMPLETEST_DB=sqlite://localhost//tmp/<module>.sqlite -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --group medium --filter '^Drupal\\Tests\\<module>\\'
 
 # Large（E2E）。ホスト側から稼働中のサイトに当てる
 python3 -m pip install -r tests/requirements.txt
