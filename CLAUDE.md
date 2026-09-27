@@ -1185,13 +1185,15 @@ Playwright（GUI の Large テスト）:
 
 サイズの強制:
 
-- すべての PHPUnit テストのクラスに `#[Small]` / `#[Medium]` / `#[Large]`
+- すべての PHPUnit テストのクラスに `#[Small]` か `#[Medium]`
   （`PHPUnit\Framework\Attributes`）を付けます。PHPUnit はこれを `small` /
-  `medium` / `large` グループとして扱うので、`--group small` で選んで実行できます。
+  `medium` グループとして扱うので、`--group small` で選んで実行できます。
+  PHPUnit のテストに `#[Large]` は付けません（Large は `tests/e2e/` だけ。上の表）。
 - サイズは置き場所ではなく、実行時に使う資源で決めます。`tests/src/Unit` にあっても
   一時ファイルを書くテストは Medium です（例: soarm_lerobot の `TrajectoryFormatDetectorTest`）。
-- CI（`.github/workflows/ci.yml`）の「Every test has a size」が、印の無いテストを
-  見つけると落ちます。
+- CI（`.github/workflows/ci.yml`）の「Every test is Small or Medium」が、印の無い
+  テストと `#[Large]` のテストを見つけると落ちます。印が合っているか（Small なのに
+  ファイルを使っていないか）までは確かめないので、レビューで見ます。
 - コンテナに `pcntl` 拡張が無いので、サイズ別の時間制限（`--enforce-time-limit`）は
   今は効きません。有効にするには Dockerfile の変更と再 build が要ります（別タスク）。
 - Kernel / E2E に偏ったテストを Small へ押し下げる是正は別タスクです（`docs/plan.md`）。
@@ -1231,9 +1233,11 @@ docker exec -w /opt/drupal workspace-drupal-1 vendor/bin/phpcs --standard=Drupal
 ```
 
 CI（GitHub Actions、`.github/workflows/ci.yml`）は、main への push と PR のたびに、
-サイズの検査・Small・phpcs を 1 つのジョブで、Medium をモジュールごとのジョブで並列に
-回します。Large（E2E・GUI）は稼働中のスタックが要るので CI では回しません。
-テストは `Dockerfile` の `app` ステージのイメージの中で動きます。
+`Dockerfile` の `app` ステージのイメージを 1 回 build し、そのイメージの中で
+サイズの検査・Small・phpcs のジョブと、モジュールごとの Medium のジョブを並列に回します。
+Large（E2E・GUI）は稼働中のスタックが要るので CI では回しません。
+Functional（`BrowserTestBase`）は nginx が要るので、最初の Functional テストを足す時に
+compose を使うジョブも足します（`docs/plan.md`）。
 
 ### agent の使い分け
 

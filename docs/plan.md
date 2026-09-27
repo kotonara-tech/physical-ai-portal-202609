@@ -28,7 +28,7 @@
 全テストにサイズの属性が付いています（`--list-tests` で Small 23 件 / Medium 102 件）。
 E2E（Large）は 50 件で、比率は Small 13% / Medium 58% / Large 29%。目安の
 70〜80% / 15〜20% / 5〜10%（CLAUDE.md「テスト分類」）から外れていて、ピラミッドになっていません。
-CI はありません（`.github/` が無い）。
+CI は GitHub Actions（`.github/workflows/ci.yml`）で、Small・Medium・phpcs を回します。
 
 ## テスト基盤と CI
 
@@ -40,14 +40,14 @@ CI はありません（`.github/` が無い）。
 - [x] `test`: 既存テストに `#[Small]` / `#[Medium]` を付ける（Unit = Small、Kernel = Medium）。
       モジュールごとに 1 コミット（core / dashboard / lerobot / vote。demo は済）。
       例外: soarm_lerobot の `TrajectoryFormatDetectorTest` は Unit にあるが一時ファイルを書くので Medium
-- [ ] `ci`: GitHub Actions のワークフローを足す
-  - `Dockerfile` の `app` ステージを build する（buildx + GHA キャッシュ）。Kernel は SQLite なので
-    DB コンテナも compose も要らない
-  - サイズの検査: `phpunit --list-tests --exclude-group small,medium,large` が 0 件でなければ落とす
-  - Small: `phpunit --group small`
-  - Medium: `phpunit --group medium`。モジュールごとに matrix で並列にし、SQLite のパスを分ける
+- [x] `ci`: GitHub Actions のワークフローを足す（PR #1）
+  - `Dockerfile` の `app` ステージを 1 回 build し（buildx + GHA キャッシュ）、artifact で
+    各ジョブに渡す。Kernel は SQLite なので DB コンテナも compose も要らない
+  - サイズの検査: `phpunit --list-tests --exclude-group small,medium` が 0 件でなければ落とす
+    （PHPUnit に `#[Large]` は付けない）
+  - Small: `phpunit --group small`。phpcs（`Drupal,DrupalPractice`）も同じジョブ
+  - Medium: `phpunit --group medium`。モジュールごとに matrix で並列にする
     （soarm_core の Kernel だけで 4 分以上かかる）
-  - phpcs（`Drupal,DrupalPractice`）も同じワークフローで回す
 - [ ] `test(dashboard)`: `unresolved()` と `popular()` が他のコンテンツタイプを除くことを
       確かめるテスト 2 件（`f7c4289` と同じ手）
 - [ ] `build(docker)`: `pcntl` を入れ、CI で `--enforce-time-limit` を効かせる。
