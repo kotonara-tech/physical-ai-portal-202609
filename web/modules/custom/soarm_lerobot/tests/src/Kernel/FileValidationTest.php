@@ -47,7 +47,7 @@ final class FileValidationTest extends LeRobotKernelTestBase {
   /**
    * Tests that every metadata problem becomes a violation.
    */
-  public function testEveryMetadataProblemBecomesAViolation(): void {
+  public function testEveryMetadataProblemBecomesViolation(): void {
     $node = $this->buildPost(['field_metadata_yaml' => $this->createFile('bad.yaml', "robot_type: ur5\nfps: 30\n")]);
 
     $messages = implode("\n", $this->violationsOn($node, 'field_metadata_yaml'));

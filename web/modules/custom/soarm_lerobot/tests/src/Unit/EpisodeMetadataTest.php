@@ -37,7 +37,7 @@ YAML;
   /**
    * Tests parsing a valid metadata document.
    */
-  public function testParsesAValidDocument(): void {
+  public function testParsesValidDocument(): void {
     $metadata = EpisodeMetadata::fromYaml(self::VALID);
 
     $this->assertSame('so-arm101', $metadata->robotType);
