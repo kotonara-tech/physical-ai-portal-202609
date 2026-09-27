@@ -62,9 +62,9 @@ final class SafeMarkdownConverterTest extends UnitTestCase {
   }
 
   /**
-   * Tests that javascript: links are neutralised while https links pass.
+   * Tests that javascript: links are neutralized while https links pass.
    */
-  public function testJavascriptLinksAreNeutralised(): void {
+  public function testJavascriptLinksAreNeutralized(): void {
     $html = $this->converter->toHtml('[click](javascript:alert(1)) and [ok](https://huggingface.co/lerobot)');
 
     $this->assertStringNotContainsString('javascript:', $html);
