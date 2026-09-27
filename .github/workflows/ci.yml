@@ -5,6 +5,9 @@
 # テストは Dockerfile の app ステージのイメージの中で動かします（手元の
 # workspace-drupal-1 と同じ PHP・vendor）。Kernel テストは SQLite を使うので、
 # DB コンテナも compose も要りません。
+#
+# イメージは build ジョブで 1 回だけ作り、artifact で後のジョブに渡します。
+# どのジョブも同じイメージでテストし、Medium は Small や phpcs の結果を待ちません。
 name: CI
 
 on:
@@ -29,8 +32,8 @@ env:
   IMAGE: soarm-app:ci
 
 jobs:
-  small:
-    name: Sizes, Small tests, phpcs
+  build:
+    name: Build the app image
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -40,15 +43,49 @@ jobs:
 
       - uses: docker/setup-buildx-action@v4
 
-      - name: Build the app image
+      - name: Build and export
         uses: docker/build-push-action@v7
         with:
           context: .
           target: app
           tags: ${{ env.IMAGE }}
-          load: true
+          outputs: type=docker,dest=${{ runner.temp }}/soarm-app.tar
           cache-from: type=gha,scope=app
           cache-to: type=gha,scope=app,mode=max
+
+      - name: Upload the image
+        uses: actions/upload-artifact@v7
+        with:
+          name: soarm-app
+          path: ${{ runner.temp }}/soarm-app.tar
+          retention-days: 1
+
+      - name: Load the image
+        run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
+
+      - name: List the modules that have Medium tests
+        id: modules
+        run: |
+          listed=$(docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
+          list=$(sed -nE 's/^ - Drupal\\Tests\\([a-z0-9_]+)\\.*/\1/p' <<<"$listed" | sort -u | jq -R . | jq -cs .)
+          echo "Modules: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  checks:
+    # 3 つのステップは互いに独立。1 つが落ちても残りは流す（!cancelled()）
+    name: Sizes, Small tests, phpcs
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: soarm-app
+          path: ${{ runner.temp }}
+
+      - name: Load the image
+        run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
 
       - name: Every test is Small or Medium
         run: |
@@ -62,46 +99,37 @@ jobs:
           fi
 
       - name: Small tests
+        if: ${{ !cancelled() }}
         run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small
 
       - name: phpcs
+        if: ${{ !cancelled() }}
         run: |
           docker run --rm -u www-data "$IMAGE" \
             vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
 
-      - name: List the modules that have Medium tests
-        id: modules
-        run: |
-          listed=$(docker run --rm -u www-data "$IMAGE" \
-            vendor/bin/phpunit -c phpunit.xml --list-tests --group medium)
-          list=$(sed -nE 's/^ - Drupal\\Tests\\([a-z0-9_]+)\\.*/\1/p' <<<"$listed" | sort -u | jq -R . | jq -cs .)
-          echo "Modules: $list"
-          echo "list=$list" >> "$GITHUB_OUTPUT"
-
   medium:
     # Kernel テストはテストメソッドごとに Drupal をインストールするので遅い。
     # モジュールごとに別のジョブにして並列で回す。
+    # Functional（BrowserTestBase）は nginx が要るので、このジョブでは動かない。
+    # 最初の Functional テストと一緒に compose を使うジョブを足す（docs/plan.md）。
     name: Medium tests (${{ matrix.module }})
-    needs: small
+    needs: build
+    if: ${{ needs.build.outputs.medium-modules != '[]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        module: ${{ fromJSON(needs.small.outputs.medium-modules) }}
+        module: ${{ fromJSON(needs.build.outputs.medium-modules) }}
     steps:
-      - uses: actions/checkout@v7
-
-      - uses: docker/setup-buildx-action@v4
-
-      - name: Build the app image (from the small job's cache)
-        uses: docker/build-push-action@v7
+      - uses: actions/download-artifact@v8
         with:
-          context: .
-          target: app
-          tags: ${{ env.IMAGE }}
-          load: true
-          cache-from: type=gha,scope=app
+          name: soarm-app
+          path: ${{ runner.temp }}
+
+      - name: Load the image
+        run: docker load --input "$RUNNER_TEMP/soarm-app.tar"
 
       - name: Medium tests
         env:
