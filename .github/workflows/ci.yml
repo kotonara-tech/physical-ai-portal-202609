@@ -139,6 +139,19 @@ jobs:
             exit 1
           fi
 
+      - name: Kernel and Functional tests are Medium
+        if: ${{ !cancelled() && steps.load.outcome == 'success' }}
+        run: |
+          # Kernel と Functional は Drupal をインストールするので Small にはなれない
+          listed=$(docker run --rm -u www-data "$IMAGE" \
+            vendor/bin/phpunit -c phpunit.xml --list-tests --testsuite kernel,functional --group small)
+          wrong=$(grep '^ - ' <<<"$listed" || true)
+          if [ -n "$wrong" ]; then
+            echo "::error::Kernel and Functional tests install Drupal, so they are Medium, not Small:"
+            echo "$wrong"
+            exit 1
+          fi
+
       - name: Small tests
         if: ${{ !cancelled() && steps.load.outcome == 'success' }}
         run: docker run --rm -u www-data "$IMAGE" vendor/bin/phpunit -c phpunit.xml --group small --fail-on-empty-test-suite
