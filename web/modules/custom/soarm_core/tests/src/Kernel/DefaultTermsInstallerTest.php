@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\soarm_core\Kernel;
 
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests the default taxonomy terms created on install.
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * soarm_core.default_terms service, which hook_install() calls.
  */
 #[Group('soarm_core')]
+#[Medium]
 final class DefaultTermsInstallerTest extends SoarmCoreKernelTestBase {
 
   /**

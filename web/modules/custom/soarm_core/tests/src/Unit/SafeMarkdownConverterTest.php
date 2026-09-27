@@ -8,12 +8,14 @@ use Drupal\soarm_core\Markdown\SafeMarkdownConverter;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 
 /**
  * Tests Markdown to safe HTML conversion for the procedure field.
  */
 #[CoversClass(SafeMarkdownConverter::class)]
 #[Group('soarm_core')]
+#[Small]
 final class SafeMarkdownConverterTest extends UnitTestCase {
 
   /**

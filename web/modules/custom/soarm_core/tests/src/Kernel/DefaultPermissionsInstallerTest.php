@@ -7,6 +7,7 @@ namespace Drupal\Tests\soarm_core\Kernel;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests the comment permissions granted to the built-in roles on install.
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
  * hook_install(), so the work lives in a service that hook_install() calls.
  */
 #[Group('soarm_core')]
+#[Medium]
 final class DefaultPermissionsInstallerTest extends SoarmCoreKernelTestBase {
 
   /**

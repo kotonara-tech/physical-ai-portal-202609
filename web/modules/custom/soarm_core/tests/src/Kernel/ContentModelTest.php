@@ -12,11 +12,13 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Medium;
 
 /**
  * Tests the "robot knowledge post" content model shipped as config.
  */
 #[Group('soarm_core')]
+#[Medium]
 final class ContentModelTest extends SoarmCoreKernelTestBase {
 
   /**
