@@ -37,7 +37,9 @@ repo の `CLAUDE.md` を読み、次の節を基準にしてください。中�
   - Small と称して DB・ファイル・ネットワーク・`\Drupal::`・コンテナに触れていないか。
   - テストのクラスに付けた `#[Small]` / `#[Medium]` が、実行時に使う資源と合っているか
     （置き場所ではなく資源で決まる。`#[Small]` なのにファイル・DB を使っていないか）。
-    付け忘れと `#[Large]` は CI が落とすが、印の誤りは CI では分からない。
+    付け忘れと `#[Large]` は CI が落とすが、見るのは `phpunit.xml` の testsuite
+    （`tests/src/Unit`・`Kernel`・`Functional`）だけ。それ以外の場所のテストと、
+    印の誤りは CI では分からないので、ここで見る。
   - Kernel テストの SQLite パスがモジュールごとに分かれているか。
 - テストを自分でも流し、緑であることを確かめる（CLAUDE.md「テストの実行」の
   コマンド。SQLite パスは `/tmp/review-<module>.sqlite` のように自分用に分ける）。
