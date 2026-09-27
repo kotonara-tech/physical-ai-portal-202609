@@ -177,7 +177,7 @@ final class VoteManagerTest extends KernelTestBase {
   /**
    * Tests that deleting a node deletes its votes.
    */
-  public function testDeletingANodeDeletesItsVotes(): void {
+  public function testDeletingNodeDeletesItsVotes(): void {
     $node = $this->createPost();
     $this->votes->cast($node, $this->createUser(), 'useful');
 

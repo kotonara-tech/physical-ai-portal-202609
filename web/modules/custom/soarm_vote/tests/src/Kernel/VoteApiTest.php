@@ -94,7 +94,7 @@ final class VoteApiTest extends KernelTestBase {
   /**
    * Tests that a POST request casts a vote and returns the new counts.
    */
-  public function testPostCastsAVote(): void {
+  public function testPostCastsVote(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
 
@@ -121,7 +121,7 @@ final class VoteApiTest extends KernelTestBase {
   /**
    * Tests that a DELETE request withdraws a vote and returns the new counts.
    */
-  public function testDeleteWithdrawsAVote(): void {
+  public function testDeleteWithdrawsVote(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
     $this->call('POST', $node, '{"type":"replication"}');
@@ -181,7 +181,7 @@ final class VoteApiTest extends KernelTestBase {
   /**
    * Tests that the detail page shows vote counts and refreshes after a vote.
    */
-  public function testDetailPageShowsCountsAndRefreshesAfterAVote(): void {
+  public function testDetailPageShowsCountsAndRefreshesAfterVote(): void {
     $voter = $this->createUser(['access content', 'cast soarm votes']);
     $this->setCurrentUser($voter);
     $node = $this->createPost();
