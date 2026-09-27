@@ -54,6 +54,8 @@ CI は GitHub Actions（`.github/workflows/ci.yml`）で、Small・Medium・phpc
       先に JUnit ログでテストごとの時間を測り、Medium の既定 10 秒に収まるか確かめる
 - [ ] Functional（`BrowserTestBase`）の基盤を確かめ、CI に compose を使うジョブを足す。
       最初の Functional テストが要る機能（プロフィールの投稿履歴かブックマーク）と一緒にやる
+- [ ] `build(docker)`: ベースイメージ `drupal:11-fpm` を digest で固定する。今は動くタグなので、
+      CI と手元で PHP や OS がずれうる。更新の手順（Dependabot など）と一緒に決める
 - [ ] Small の条件を CI で機械的に確かめる: Small のステップを `docker run --network none --read-only`
       で流し、ネットワークとファイルの書き込みを使う Small を落とす（今は印の有無しか見ていない）
 - [ ] 改めて整頓: Kernel に偏ったテストを Small へ押し下げる。モジュールごとに別の依頼。
