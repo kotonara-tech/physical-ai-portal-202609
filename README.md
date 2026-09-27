@@ -67,6 +67,10 @@ docker exec -w /opt/drupal workspace-drupal-1 \
   vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
 ```
 
+GitHub Actions（`.github/workflows/ci.yml`）が、main への push と PR のたびに
+PHPUnit の Small / Medium テストと phpcs を回します。受け入れテスト（E2E）は
+起動中のサイトが要るので、CI では回しません。
+
 ## 作り直す
 
 データベースとアップロード済みファイルを **すべて消して** 最初からやり直す:

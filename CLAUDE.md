@@ -1148,8 +1148,8 @@ Google のテストサイズに合わせます。
 
 | 実体 | サイズ | 理由 | スコープ | 付ける印 / 実行 |
 |---|---|---|---|---|
-| `UnitTestCase`（`tests/src/Unit`） | Small | 1 プロセス。DB・ファイル・ネットワーク無し。依存はテストダブル | 単体 | `#[Small]` / `--testsuite unit` |
-| `KernelTestBase`（`tests/src/Kernel`、SQLite） | Medium | SQLite ファイル（DB + ファイル）。1 台の中 | 単体〜結合 | `#[Medium]` / `--testsuite kernel` |
+| `UnitTestCase`（`tests/src/Unit`） | Small | 1 プロセス。DB・ファイル・ネットワーク無し。依存はテストダブル | 単体 | `#[Small]` / `--group small`。ファイルを使うなら Unit にあっても Medium |
+| `KernelTestBase`（`tests/src/Kernel`、SQLite） | Medium | SQLite ファイル（DB + ファイル）。1 台の中 | 単体〜結合 | `#[Medium]` / `--group medium` |
 | `BrowserTestBase`（`tests/src/Functional`） | Medium | テスト専用に毎回インストールする隔離サイトへ、同じマシン内の nginx 経由で HTTP | 結合〜E2E | `#[Medium]`。まだ 1 本も無く、動くか未確認。初めて必要になった時に基盤を確かめる |
 | `WebDriverTestBase` / Nightwatch | 使わない | Drupal core 自身が Nightwatch から Playwright への移行を決めた（#3467492）。JS / GUI は下の Playwright に寄せる | — | — |
 | `tests/e2e/`（pytest + requests） | Large | 稼働中の compose スタックに当てる。DB に投稿が残り、手動操作と状態を共有する（non-hermetic） | E2E | 置き場所で区別 / `python3 -m pytest -q` |
@@ -1183,16 +1183,20 @@ Playwright（GUI の Large テスト）:
 - GUI テストは見た目の変更で壊れやすいので、要素は role / label で探し、
   1 機能 1〜2 本に抑えます。
 
-サイズの強制（今はルールだけ）:
+サイズの強制:
 
-- 新しい PHPUnit テストのクラスには `#[Small]` / `#[Medium]`
+- すべての PHPUnit テストのクラスに `#[Small]` / `#[Medium]` / `#[Large]`
   （`PHPUnit\Framework\Attributes`）を付けます。PHPUnit はこれを `small` /
-  `medium` グループとして扱うので、`--group small` で選んで実行できます。
+  `medium` / `large` グループとして扱うので、`--group small` で選んで実行できます。
+- サイズは置き場所ではなく、実行時に使う資源で決めます。`tests/src/Unit` にあっても
+  一時ファイルを書くテストは Medium です（例: soarm_lerobot の `TrajectoryFormatDetectorTest`）。
+- CI（`.github/workflows/ci.yml`）の「Every test has a size」が、印の無いテストを
+  見つけると落ちます。
 - コンテナに `pcntl` 拡張が無いので、サイズ別の時間制限（`--enforce-time-limit`）は
   今は効きません。有効にするには Dockerfile の変更と再 build が要ります（別タスク）。
-- 既存テストへの属性付けと、Kernel / E2E に偏ったテストを Small へ押し下げる是正も
-  別タスクです（2026-09-27 時点のテストメソッド数で Unit 18 / Kernel 72 /
-  Functional 0、E2E は pytest の実行件数で 50）。
+- Kernel / E2E に偏ったテストを Small へ押し下げる是正は別タスクです（`docs/plan.md`）。
+  2026-09-27 の実行件数で Small 23 / Medium 102 / Large（E2E）50
+  （13% / 58% / 29%）。
 
 出典:
 
@@ -1209,11 +1213,11 @@ Playwright（GUI の Large テスト）:
 ### テストの実行
 
 ```sh
-# Small（Unit）
-docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --testsuite unit
+# Small
+docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --group small
 
-# Medium（Kernel）全部
-docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --testsuite kernel
+# Medium 全部
+docker exec -u www-data -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml --group medium
 
 # 1 モジュールだけ。SQLite のパスはモジュールごとに分ける
 docker exec -u www-data -e SIMPLETEST_DB=sqlite://localhost//tmp/<module>.sqlite -w /opt/drupal workspace-drupal-1 vendor/bin/phpunit -c phpunit.xml web/modules/custom/<module>
@@ -1225,6 +1229,11 @@ python3 -m pytest -q
 # コーディング規約
 docker exec -w /opt/drupal workspace-drupal-1 vendor/bin/phpcs --standard=Drupal,DrupalPractice web/modules/custom
 ```
+
+CI（GitHub Actions、`.github/workflows/ci.yml`）は、main への push と PR のたびに、
+サイズの検査・Small・phpcs を 1 つのジョブで、Medium をモジュールごとのジョブで並列に
+回します。Large（E2E・GUI）は稼働中のスタックが要るので CI では回しません。
+テストは `Dockerfile` の `app` ステージのイメージの中で動きます。
 
 ### agent の使い分け
 
