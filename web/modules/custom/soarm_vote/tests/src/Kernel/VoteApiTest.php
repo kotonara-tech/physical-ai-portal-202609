@@ -46,6 +46,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->createUser();
   }
 
+  /**
+   * Creates a robot knowledge post.
+   */
   private function createPost(bool $published = TRUE): NodeInterface {
     $node = Node::create(['type' => 'robot_knowledge', 'title' => 'post', 'status' => (int) $published]);
     $node->save();
@@ -60,10 +63,16 @@ final class VoteApiTest extends KernelTestBase {
     return $this->container->get('http_kernel')->handle($request);
   }
 
+  /**
+   * Decodes a JSON response body.
+   */
   private function json(Response $response): array {
     return json_decode((string) $response->getContent(), TRUE, 512, JSON_THROW_ON_ERROR);
   }
 
+  /**
+   * Tests that anyone who can see the post can read its vote counts.
+   */
   public function testAnyoneWhoCanSeeThePostCanReadCounts(): void {
     $this->setCurrentUser($this->createUser(['access content']));
 
@@ -73,12 +82,18 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertSame(['counts' => self::ZERO, 'my_votes' => []], $this->json($response));
   }
 
+  /**
+   * Tests that reading vote counts of an unpublished post is forbidden.
+   */
   public function testCountsOfAnUnpublishedPostAreForbidden(): void {
     $this->setCurrentUser($this->createUser(['access content']));
 
     $this->assertSame(403, $this->call('GET', $this->createPost(FALSE))->getStatusCode());
   }
 
+  /**
+   * Tests that a POST request casts a vote and returns the new counts.
+   */
   public function testPostCastsAVote(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
@@ -89,6 +104,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertSame(['counts' => ['useful' => 1] + self::ZERO, 'my_votes' => ['useful']], $this->json($response));
   }
 
+  /**
+   * Tests that repeating the same vote is OK but does not create a duplicate.
+   */
   public function testRepeatedVoteIsOkButNotCreated(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
@@ -100,6 +118,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertSame(1, $this->json($response)['counts']['useful']);
   }
 
+  /**
+   * Tests that a DELETE request withdraws a vote and returns the new counts.
+   */
   public function testDeleteWithdrawsAVote(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
@@ -111,6 +132,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertSame(['counts' => self::ZERO, 'my_votes' => []], $this->json($response));
   }
 
+  /**
+   * Tests that unknown vote types and malformed bodies are bad requests.
+   */
   public function testUnknownTypeAndMalformedBodiesAreBadRequests(): void {
     $this->setCurrentUser($this->createUser(['access content', 'cast soarm votes']));
     $node = $this->createPost();
@@ -120,12 +144,18 @@ final class VoteApiTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests that voting needs the "cast soarm votes" permission.
+   */
   public function testVotingNeedsThePermission(): void {
     $this->setCurrentUser($this->createUser(['access content']));
 
     $this->assertSame(403, $this->call('POST', $this->createPost(), '{"type":"useful"}')->getStatusCode());
   }
 
+  /**
+   * Tests that anonymous users cannot vote even with the permission granted.
+   */
   public function testAnonymousCannotVoteEvenWithThePermission(): void {
     Role::create(['id' => RoleInterface::ANONYMOUS_ID, 'label' => 'Anonymous'])
       ->grantPermission('access content')
@@ -136,6 +166,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertSame(403, $this->call('POST', $this->createPost(), '{"type":"useful"}')->getStatusCode());
   }
 
+  /**
+   * Tests that vote count responses are never cached across users.
+   */
   public function testResponsesAreNeverCachedAcrossUsers(): void {
     $this->setCurrentUser($this->createUser(['access content']));
 
@@ -145,6 +178,9 @@ final class VoteApiTest extends KernelTestBase {
     $this->assertStringContainsString('no-cache', (string) $response->headers->get('Cache-Control'));
   }
 
+  /**
+   * Tests that the detail page shows vote counts and refreshes after a vote.
+   */
   public function testDetailPageShowsCountsAndRefreshesAfterAVote(): void {
     $voter = $this->createUser(['access content', 'cast soarm votes']);
     $this->setCurrentUser($voter);

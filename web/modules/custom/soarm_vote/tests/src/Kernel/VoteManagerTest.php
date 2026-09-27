@@ -27,6 +27,9 @@ final class VoteManagerTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'user', 'field', 'text', 'filter', 'node', 'soarm_vote'];
 
+  /**
+   * The vote manager under test.
+   */
   private VoteManagerInterface $votes;
 
   /**
@@ -42,16 +45,25 @@ final class VoteManagerTest extends KernelTestBase {
     $this->votes = $this->container->get('soarm_vote.manager');
   }
 
+  /**
+   * Creates a robot knowledge post.
+   */
   private function createPost(string $title = 'post'): NodeInterface {
     $node = Node::create(['type' => 'robot_knowledge', 'title' => $title]);
     $node->save();
     return $node;
   }
 
+  /**
+   * Tests that the vote types are the three from the spec.
+   */
   public function testTypesAreTheThreeFromTheSpec(): void {
     $this->assertSame(['useful', 'improvement', 'replication'], VoteManagerInterface::TYPES);
   }
 
+  /**
+   * Tests that counts start at zero for every vote type.
+   */
   public function testCountsStartAtZeroForEveryType(): void {
     $this->assertSame(
       ['useful' => 0, 'improvement' => 0, 'replication' => 0],
@@ -59,6 +71,9 @@ final class VoteManagerTest extends KernelTestBase {
     );
   }
 
+  /**
+   * Tests that casting a vote counts only that type.
+   */
   #[DataProvider('typeProvider')]
   public function testCastCountsOnlyThatType(string $type): void {
     $node = $this->createPost();
@@ -70,10 +85,16 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame($expected, $this->votes->counts($node));
   }
 
+  /**
+   * Data provider for testCastCountsOnlyThatType().
+   */
   public static function typeProvider(): array {
     return [['useful'], ['improvement'], ['replication']];
   }
 
+  /**
+   * Tests that the same user casting the same type twice counts once.
+   */
   public function testSameUserSameTypeCountsOnce(): void {
     $node = $this->createPost();
     $user = $this->createUser();
@@ -84,6 +105,9 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame(1, $this->votes->counts($node)['useful']);
   }
 
+  /**
+   * Tests that one user may cast different vote types on the same post.
+   */
   public function testOneUserMayCastDifferentTypes(): void {
     $node = $this->createPost();
     $user = $this->createUser();
@@ -95,6 +119,9 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertEqualsCanonicalizing(['useful', 'replication'], $this->votes->typesCastBy($node, $user));
   }
 
+  /**
+   * Tests that votes from different users add up.
+   */
   public function testDifferentUsersAddUp(): void {
     $node = $this->createPost();
 
@@ -104,6 +131,9 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame(2, $this->votes->counts($node)['useful']);
   }
 
+  /**
+   * Tests that votes are counted per node, not shared across posts.
+   */
   public function testVotesAreCountedPerNode(): void {
     $first = $this->createPost('first');
     $second = $this->createPost('second');
@@ -113,6 +143,9 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame(0, $this->votes->counts($second)['useful']);
   }
 
+  /**
+   * Tests that withdraw() removes only the given vote type.
+   */
   public function testWithdrawRemovesOnlyThatVote(): void {
     $node = $this->createPost();
     $user = $this->createUser();
@@ -125,16 +158,25 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame(['useful' => 0, 'improvement' => 1, 'replication' => 0], $this->votes->counts($node));
   }
 
+  /**
+   * Tests that casting an unknown vote type is rejected.
+   */
   public function testUnknownTypeIsRejected(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->votes->cast($this->createPost(), $this->createUser(), 'spam');
   }
 
+  /**
+   * Tests that anonymous users cannot vote.
+   */
   public function testAnonymousCannotVote(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->votes->cast($this->createPost(), new AnonymousUserSession(), 'useful');
   }
 
+  /**
+   * Tests that deleting a node deletes its votes.
+   */
   public function testDeletingANodeDeletesItsVotes(): void {
     $node = $this->createPost();
     $this->votes->cast($node, $this->createUser(), 'useful');
@@ -145,6 +187,9 @@ final class VoteManagerTest extends KernelTestBase {
     $this->assertSame(0, (int) $storage->getQuery()->accessCheck(FALSE)->count()->execute());
   }
 
+  /**
+   * Tests that mostVoted() orders by total votes and skips unvoted posts.
+   */
   public function testMostVotedOrdersByTotalVotesAndSkipsUnvoted(): void {
     $quiet = $this->createPost('quiet');
     $some = $this->createPost('some');
