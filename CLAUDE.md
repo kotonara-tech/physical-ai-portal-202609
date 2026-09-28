@@ -1255,7 +1255,7 @@ compose を使うジョブも足します（`docs/plan.md`）。
   セキュリティ）。コードは書かない。
 - メインのセッション: 振る舞いの分解と依頼（先に整頓・あとに整頓・改めて整頓・整頓しない
   の判断を含む）、レビュー結果の判断、稼働サイトへの反映（`pm:enable`・`cr`・E2E）、
-  push。
+  push、PR の作成とマージ前の説明文の見直し（下の「プルリクエスト」）。
 
 ### コミットメッセージ
 
@@ -1305,6 +1305,25 @@ test(vote): mark VoteManagerTest as Medium
 build(docker): add pcntl for PHPUnit time limits
 docs: record commit message rules in CLAUDE.md
 ```
+
+### プルリクエスト
+
+- 説明文は**日本語**で、`.github/pull_request_template.md` の見出しに沿って書く。
+  タイトルは上のコミットメッセージと同じ規約（英語・Conventional Commits）。
+- `gh pr create` は `--body` / `--body-file` を付けるとテンプレートを使わない。
+  テンプレートを写したファイルに本文を書き、`--body-file` で渡す。
+- 1 行目のタイトルだけで何をするかが分かるようにする。本文には何を・なぜを書き、
+  ほかの案を選ばなかった理由と既知の制限も書く。リンク先が読めなくても分かるようにする。
+- 構造の変更と振る舞いの変更を同じ PR に混ぜない（上の「Tidy First」）。
+- 元に戻しにくい変更（画面・API・データモデル）は、テンプレートの該当欄で明示する。
+- マージの前に、説明文が最終的な変更と合っているか見直す。
+
+出典:
+
+- GitHub Docs「Creating a pull request template for your repository」: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository
+- Google Engineering Practices「Writing good CL descriptions」: https://google.github.io/eng-practices/review/developer/cl-descriptions.html
+- Drupal「Issue summary template -- bare」（Problem/Motivation・Proposed resolution・Remaining tasks・User interface changes・API changes・Data model changes）: https://www.drupal.org/docs/develop/issues/fields-and-other-parts-of-an-issue/special-issue-summary-templates/issue-summary-template-bare
+- Kent Beck「Structure and Behavior PRs」: https://newsletter.kentbeck.com/p/structure-and-behavior-prs
 
 ## Drupal 11 の追加の注意
 
