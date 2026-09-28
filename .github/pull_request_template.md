@@ -23,10 +23,10 @@
 
 ## 元に戻しにくい変更
 
-<!-- 当てはまるものに印を付けて説明する。無ければ「なし」と書く。 -->
+<!-- 当てはまるものに印を付けて説明する。無ければ「なし」と書く。項目は CLAUDE.md「Tidy First」8 の一覧と同じ。 -->
 
-- [ ] 画面（route の path、表示の文言）
-- [ ] API（JSON:API のリソース名・属性、独自エンドポイント）
+- [ ] 画面（route の path）
+- [ ] API（JSON:API のリソース名・属性）
 - [ ] データモデル（config・field の machine name、config schema、DB スキーマ、`hook_update_N`）
 
 ## テスト
